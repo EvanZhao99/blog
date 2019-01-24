@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<!-- bfc区域不与浮动box重叠 -->
+<section class="float">
+  <article>
+    <style type="text/css">
+      .float{
+        background: red
+      }
+      .float .left{
+        float: left;
+        height: 100px;
+        width: 200px;
+        background: yellow;
+      }
+      .float .right{
+        width: 300px;
+        height: 110px;
+        background: blue;
+        overflow: auto; /*创建bfc*/
+      }
+    </style>
+    <div class="left"></div>
+    <div class="right"></div>
+  </article>
+</section>
+</body>
+</html>
