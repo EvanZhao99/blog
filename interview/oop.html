@@ -35,21 +35,31 @@
     function Parent2 () {
       this.name = 'parent2'
       this.arr = [1, 2, 3]
-      this.clearName = function () {
-        this.name = ''
-      }
     }
     function Child2 () {
       this.type = 'child2'
     }
     Child2.prototype = new Parent2()
-    let c1 = new Child2()
-    let c2 = new Child2()
+    let c21 = new Child2()
+    let c22 = new Child2()
 
+    /**
+    * 组合方式
+    */
+    function Parent3 () {
+      this.name = 'parent3'
+      this.arr = [1, 2, 3]
+    }
+    function Child3 () {
+      Parent3.call(this)
+      this.type = 'child3'
+    }
+    Child3.prototype = new Parent3()
+    let c31 = new Child3()
+    let c32 = new Child3()
 
   </script>
 </head>
 <body>
-
 </body>
 </html>
