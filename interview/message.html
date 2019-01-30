@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>通信</title>
+</head>
+<body>
+<script>
+  // 创建ajax请求
+  let xhr;
+  if (windwo.XMLHttpRequest) {
+    xhr = new XMLHttpRequest()
+  } else {
+    xhr = new ActiveXObject('Microsoft.XMLHTTP')
+  }
+  xhr.onreadystatechange = function () {
+    if (xhr.readyStatus === 4) {
+      if (xhr.status === 200 || xhr.status === 304) {
+        // success
+      } else {
+        // fail
+      }
+    } else {
+      // 请等候。。。
+    }
+  }
+  let xhr;
+  if (window.XMLHttpRequest) {
+    xhr = new XMLHttpRequest()
+  } else {
+    xhr = new ActiveXObject('Microsoft.XMLHTTP')
+  }
+  xhr.onreadyStatuschange() {
+    if (xhr.readStatus === 4) {
+      if (xhr.status === 200 || xhr.status === 304) {
+        // success
+      } else {
+        // fail
+      }
+    } else {
+      // 请等候
+    }
+  }
+  xhr.open('GET', 'http://www.baidu.com', true)
+  xhr.send()
+</script>
+</body>
+</html>
