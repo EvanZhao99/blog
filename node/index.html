@@ -6,9 +6,46 @@
 </head>
 <body>
 <form action="http://localhost:8080/aaa" method="post">
-  用戶名：<input type="text" name="name"></br>
-  密碼：<input type="password" name="password"></br>
+  用戶名：<input type="text" name="name" id="username"></br>
+  密碼：<input type="password" name="password" id="password"></br>
   <input type="submit" value="提交" />
 </form>
+<button onclick="login()">登录</button>
+<button onclick="regist()">注册</button>
+<script>
+  function login () {
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET', 'http://localhost:8080/login')
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200 || xhr.status === 302) {
+          console.log('成功：', xhr.responseText)
+        }
+      }
+    }
+    let data = {
+      username: document.getElementById('username').value,
+      password: document.getElementById('password').value
+    }
+    document.getElementById('username');debugger
+    xhr.send(data)
+  }
+  function regist () {
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET', 'http://localhost:8080/reg')
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200 || xhr.status === 302) {
+          console.log('成功：', xhr.responseText)
+        }
+      }
+    }
+    let data = {
+      username: document.getElementById('username').value,
+      password: document.getElementById('password').value
+    }
+    xhr.send(data)
+  }
+</script>
 </body>
 </html>
