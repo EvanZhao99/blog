@@ -210,3 +210,40 @@ User.findOne({}).then(data => {
   __v: 0 }
 */
 ```
+- 模糊查询 -正则
+- 
+```
+User.find({username: /zjc/})
+```
+##### 分页
+```
+let pageSize = 3
+let pageNum = 2
+// 先查找 再排序 再跳过 再limit
+User.find({}).sort({password: -1}).limit(pageSize).skip((pageNum-1)*pageSize).exec((err, data) => {
+    console.log(data)
+})
+// 输出结果：
+/*
+true
+开启成功
+[ { meta: '备注',
+    hobby: [],
+    _id: 5cc479d23e6dbb8ad1f8605e,
+    username: 'zjc',
+    password: '666666',
+    __v: 0 },
+  { meta: '备注',
+    hobby: [],
+    _id: 5cc479d23e6dbb8ad1f8605f,
+    username: 'zjc',
+    password: '666666',
+    __v: 0 },
+  { meta: '备注',
+    hobby: [],
+    _id: 5cc479d23e6dbb8ad1f86060,
+    username: 'zjc',
+    password: '666666',
+    __v: 0 } ]
+*/
+```

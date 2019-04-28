@@ -47,6 +47,12 @@ console.log(User === db.model('User'))
 // User.create(arr).then(data => {
 //     console.log(data)
 // })
-User.findOne({}).then(data => {
+// User.findOne({}).then(data => {
+//     console.log(data)
+// })
+let pageSize = 3
+let pageNum = 2
+// 先查找 再排序 再跳过 再limit
+User.find({}).sort({password: -1}).limit(pageSize).skip((pageNum-1)*pageSize).exec((err, data) => {
     console.log(data)
 })
