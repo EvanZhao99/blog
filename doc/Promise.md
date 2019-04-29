@@ -115,7 +115,7 @@ readFile('1.txt').then(function (data) {
 }).catch(function(err){
  console.log(err);
 });
-```
+``` 
 ### promise API
 - Promise.all
 同时执行多个异步，均完成是状态变为resolve
