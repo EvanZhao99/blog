@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+let ObjectId = mongoose.SchemaTypes.ObjectId; // mongoose内置提供的类型
 // 链接数据库
 console.log(1)
 mongoose.connect('mongodb://localhost/school', {
@@ -23,9 +23,25 @@ let UserSchema = new mongoose.Schema({
     meta: {type: String, default: '备注'},
     hobby: []
 })
+UserSchema.virtual('userpass').get(function() {
+    return this.username + this.password
+})
 let User = db.model('User', UserSchema)
-console.log(User === db.model('User'))
 
+let CartSchema = new mongoose.Schema({
+    productName: String,
+    productPrice: Number,
+    user: {
+        type: ObjectId,
+        ref: User
+    }
+})
+let Cart = db.model('Cart', CartSchema)
+User.create({username: 'zjc'}).then(data => {
+    Cart.create({productName: 'iphone', productPrice: 300, user: data._id}).then(data => {
+        console.log(data)
+    })
+})
 // 增加
 // User.create({username: 'zjc', password: 666666, data: new Date()}, function(err, data) {
 //     console.log(data)
@@ -50,9 +66,21 @@ console.log(User === db.model('User'))
 // User.findOne({}).then(data => {
 //     console.log(data)
 // })
-let pageSize = 3
-let pageNum = 2
-// 先查找 再排序 再跳过 再limit
-User.find({}).sort({password: -1}).limit(pageSize).skip((pageNum-1)*pageSize).exec((err, data) => {
+// 查询
+// let pageSize = 3
+// let pageNum = 2
+// // 先查找 再排序 再跳过 再limit
+// User.find({}).sort({password: -1}).limit(pageSize).skip((pageNum-1)*pageSize).exec((err, data) => {
+//     console.log(data)
+// })
+// Cart.findOne({productName: 'iphone'}).then(data => {
+//     User.findById(data.user).then(data => {
+//         console.log(data)
+//     })
+// })
+
+
+User.findOne().then(data => {
     console.log(data)
+    console.log(data.userpass)
 })
