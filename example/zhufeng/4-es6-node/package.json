@@ -1,0 +1,21 @@
+{
+  "name": "4-es6-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "decorator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "npx": "^10.2.0"
+  }
+}
