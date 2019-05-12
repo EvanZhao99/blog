@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        
+        let callback = () => {
+            console.log(app.children.length)
+            console.log(Date.now() - t)
+        }
+        let observer = new MutationObserver(callback);
+        observer.observe(app, {childList: true})
+        let t = Date.now()
+        for(let i = 0; i < 100000; i++) {
+            app.appendChild(document.createElement('p'))
+        }
+        for(let i = 0; i < 100000; i++) {
+            app.appendChild(document.createElement('p'))
+        }
+        for(let i = 0; i < 100000; i++) {
+            app.appendChild(document.createElement('p'))
+        }
+        console.log(1,Date.now() - t)
+        console.log(app.children.length)
+    </script>
+</body>
+</html>
