@@ -1,84 +1,191 @@
-* 高阶函数：参数为函数，预置参数
-* 函数柯里化：
-* 偏函数：
-* AOP：面向切片编程。把原来的代码切成片， 在在中间加入自己的代码
-* includes
-* 
-* 异步不能使用 try catch
-* 同步“异步的返回结果”
-* 错误优先
-* 宏任务 微任务
-- 
-```
-function a() {
-    function f() {}
-    return f
+# promise 内部执行过程
+以ajax请求为例：
+ 1. 创建promise实例: 传入executor(resolve, reject) 立即执行函数 两个回调
+ ```javascript
+ let extcutor = (resolve, reject) => {
+     try{
+         // todo
+         resolve()
+     }catch(e) {
+         reject(e)
+     }
+     
+ }
+ new Promise(executor)
+ ```
+ 2. 构造函数会进行一些列初始化，创建相应变量保存数据，并执行相应操作，具体请看步骤3-6
+ 3. 创建：value reason 两个参数，分别保存成功的值 失败原因
+ 3. 创建：status 三个状态：pending/fulfilled/rejected
+ 1. 创建：resolveCallbacks rejectCallbacks 存放成功或失败的回调
+ 1. 执行；executor,发送ajax请求
+ 7. 执行：then 接收onfulfilled，并push到resolveCallbacks; 接收onrejected,并push到rejectCallback
+ 1. 监听http状态：
+    *  成功：执行resolve 1.将status值变为fulfilled; 2.创建一个微任务，遍历resovelCallbacks并执行所有callback
+    *  失败：执行reject 1. 将status值变为rejected; 2. 创建一个微任务， 遍历rejectCallbacks并执行所有callback
+ 1. 执行完主线程所有宏任务，然后清空微任务，此时执行onfulfilled或onrejected
+
+```javascript
+let resolvePromise = (promise2, x, resolve, reject) => {
+    // 判断x的类型 来处理promise2是成功还是失败
+    // 所有的promise都遵循规范 不同的人实现的promise库可能不同
+    // 尽可能考虑周全 要考虑别人的promise出错的情况
+    if(promsie2 === x) {
+        return reject(new TypeError('循环引用'))
+    }
+    // 判断x是不是一个promise 这个x可能不是自己的promise 为了保证安全 需要进行校验 防止一起调用成功和失败
+    if(typeof x === 'function' || (typeof x === 'object' && x !== null)) {
+        let called; // 维护该变量 判断是否调用过resolve/reject 防止两者一起调用
+        
+        // 此步骤使用`try-catch`是为了防止调用外部promise.then报错，考虑到第三方作者可能采用`defineProperty`重写then方法的getter时抛异常，并且只取一次，以后使用call方法调用
+        try{
+            let then = x.then;
+            if(typeof then === 'function') {
+                then.call(x, y => {
+                    if(called) {
+                        return
+                    }
+                    called = true
+                    resolvePromise(promise2, y, resolve, reject)
+                }, r => {
+                    if(called) {
+                        return
+                    }
+                    called = true
+                    reject(r)
+                })
+            } else {
+                resolve(x)
+            }
+        }catch(e) {
+            if(called) {
+                return
+            }
+            called = true
+            reject(e)
+        }
+    }else {
+        resolve(x)
+    }
 }
-function a () {
-    return function() {}
+class Promise{
+    constructor(executor) {
+        this.status = 'pending';
+        this.value
+        this.reason;
+        this.resolveCallbacks = [] // 当then是pending时 我希望把成功的方法都放到数组当中
+        this.rejectCallbacks = []
+        let resolve = (value) => {
+            // 如果是promise就调用这个promise的then方法
+            if(value instanceof Promise) {
+                return value.then(resolve, reject)
+            }
+            if(this.status == 'pending') { // 保证状态只改变一次
+                this.status = 'fulfilled'
+                this.value = value
+                this.resolveCallbacks.forEach(fn => fn()) // 发布
+            }
+        }
+        let reject = (reason) => { // 保证状态只改变一次
+            if(this.status === 'pending') {
+                this.status = 'rejected'
+                this.reason = reason
+                this.rejectCallbacks.forEach(fn => fn())
+            }
+
+        }
+        // 立即执行函数为外部提供 使用try-catch比较稳妥
+        try{
+            executor(resolve, reject)
+        } catch(e) {
+            reject(e)
+        }
+    }
+    // 根据状态执行成功或失败的回调，并根据callback返回结果做相应的处理，最后返回一个新的promise
+    then(onfulfilled, onrejected) {
+        onfulfilled = typeof onfulfilled === 'function' ? onfulfilled : value => value;
+        onrejected = typeof onrejected === 'function' ? onrejected : reason => {throw reason};
+        // 创建一个新的promise
+        let promise2;
+        promise2 = new Promise((resolve, reject) => {
+            if(this.status === 'fulfilled') {
+                setTimeout(() => {
+                    try{
+                        let x = onfulfilled(this.value);
+                        // x是普通值还是promise 如果是普通值 直接调用promise2的resolve
+                        // 如果是promise 那应该让x这个promise执行x.then
+                        resolvePromise(promise2, x, resolve, reject)
+                    }catch(e) {
+                        reject(e)
+                    }
+                },0)
+            }
+            if(this.status === 'rejected') {
+                setTimeout(() => {
+                    try{
+                        let x = onrejected(this.reason)
+                        resolvePromise(promise2, x, resolve, reject)
+                    } catch(e) {
+                        reject(e)
+                    }
+                })
+            }
+            if(this.status == 'pending') {
+                this.resolveCallbacks.push(() => {
+                    setTimeout(() => {
+                        try{
+                            let x = onfulfilled(this.value)
+                            resolvePromise(promise2, x, resolve, reject)
+                        }catch(e) {
+                            reject(e)
+                        }
+                    }, 0)
+                })
+                this.rejectCallbacks.push(() => {
+                    setTimeout(() => {
+                        try{
+                            let x = onrejected(this.reason)
+                            resolvePromise(promise2, x, resolve, reject)
+                        }catch(e) {
+                            reject(e)
+                        }
+                    }, 0)
+                })
+            }
+        })
+        return promise2
+    }
+    catch(rejectCallback) {
+        this.then(null, rejectCallback)
+    }
+    finally(callback) {
+        this.then(callback, callback)
+    }
 }
-哪个性能高
+
+Promise.resolve = function(value) {
+    return new Promise((resolve, reject) => {
+        resolve(value)
+    })
+}
+Promise.reject = function(value) {
+    return new Promise((resolve, reject) => {
+        reject(reason)
+    })
+}
+module.exports = Promise
 ```
-- 发布 -> 代理 -> 订阅
-- 观察者模式 （与发布订阅的区别）
-- Vuex 发布订阅 proxy
-- 
-- 异步缺陷：
-- 1 回调地狱
-- 2 错误问题 不能使用try-catch
-- 3 同步“异步问题需要自己维护计数器”
-- 
-# promise
-- 是一个类 new Promise
-- 含义；承诺。
-- 两个值：value，reason
-- 三个状态：成功态；失败；等待
-- 一个promise可以then多次，
-### then
-- return一个常量 包括undefined,会传到下一个then
-- 如果then方法中抛出异常 会走到下一个then的catch中
-- 穿透 如果没有处理错误 继续向下找
-- catch不会中断then链
-- 如果返回一个promise 状态会传给下一个then
-- 失败 两种可能 错误 失败的promise
-- finally es9 只是一个肯定执行的函数
-- promise一旦成功就不能再改为失败状态
-- 每次调用then会返回一个新的promise
-- 写promise时需要遵循规范
-- 不同promise可能会混用，需要考虑别人的promise出错的情况
-- x 与 proise2不能相等
-- typeof 检测前三位？？？
-- 避免多次取then, then.call(x, y=>{})
-- 测试： promise/A+
-- promise.defer
-- 执行promise`promise.then`
-- catch 是没有“成功”的`then`方法
-- fn(...arguments) 箭头函数向上查找？？？
-- 
-# generator es6语法
-- 异步迭代 自执行函数实现（递归）
-- 
-
-
-
-### tem
-- typeof instanceof constructor object.toString
-- promisify promisise化
-- mz 模块 将node模块都进行了promise包装
-- console.dir()f????
-- 类数组？？？
-- 迭代器会不断调用next,直到`done===true`
-- ti co 大牛 GitHub
-- 1.toString() // 报错
-- 1.1.toString() // 不报错
-- console.log(typeof 1+ + '123') // Number
-
-
-### 作业
-- finally的实现
-- promise流程写一遍
-- 答题
-- 
-### next
-- 周三五：es6 map set symbol reduce compose
-- 周日：node核心应用
+# 测试
+- 全局安装测试工具 sudo npm instal promises-aplus-tests -g
+- 执行命令：promsies-aplus-tests 文件名
+- 需要暴露给测试工具一个对象用于测试
+```
+// 暴露一个方法 这个方法需要返回一个对象 对象上需要有 promise resolve reject 三个属性
+Promise.defer= Promise.deferred = function() {
+    let dfd = {}
+    dfd.promise = new Promise((resolve, reject) => {
+        dfd.resolve = resolve
+        dfd.reject = reject
+    })
+    return 
+}
+```
