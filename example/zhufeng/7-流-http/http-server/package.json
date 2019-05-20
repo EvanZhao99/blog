@@ -1,0 +1,13 @@
+{
+  "name": "chuang-server",
+  "version": "0.0.1",
+  "description": "is a http-server",
+  "bin": {
+    "http-server": "www.js"
+  },
+  "author": "chuang<pluckychuang@163.com>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.20.0"
+  }
+}
