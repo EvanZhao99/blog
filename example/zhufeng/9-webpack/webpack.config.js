@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 module.exports = {
   mode: 'development',
   devtool: 'eval',
+  watch: true,
   // 单入口打包 默认chunk名为'main'，每个chunk一般会生成一个文件
   entry: path.join(__dirname, 'src/index.js'),
   // 多入口打包
@@ -17,6 +18,16 @@ module.exports = {
     path:path.join(__dirname, 'dist'),
     filename: 'bundle.js',
     publicPath: '/' // 访问路径为：publicPath+outputPath
+  },
+  optimization: { // 放优化内容
+    minimizer: { // 优化插件
+      new TerserWebpackPlugin({
+        parallel: true,
+        cache: true // 开启缓存
+      }),
+
+
+    }
   },
   // 如果使用devServer, 那么所有产出的文件都会写入内存里，而不是硬盘
   devServer: {
