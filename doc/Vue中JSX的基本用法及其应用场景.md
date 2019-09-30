@@ -266,7 +266,12 @@ export default {
 </script>
 ```
 渲染效果：
-![](./img/jsx_demo.png)
+![](https://github.com/pluckychuang/blog/blob/master/doc/img/jsx_demo.png?raw=true)
+
+## 参考
+- [react API](https://zh-hans.reactjs.org/docs/introducing-jsx.html)
+- [Vue API](https://cn.vuejs.org/v2/guide/render-function.html)
+- [iview table组件源码](https://github.com/iview/iview/tree/2.0/src/components/table)
 
 
 
