@@ -42,7 +42,7 @@ render: function(createElement) {
 ```
 > 事实上， Babel会把JSX语法转义成JS对象，也就是上述代码的后一种写法。
 
-##### 绑定事件 & v-on
+##### 2. 绑定事件 & v-on
 在JSX中事件的命名采用小驼峰式（camelCase），而不是纯小写。
 ```javascript
 methods: {
@@ -55,7 +55,7 @@ render: (h) => {
 }
 
 ```
-##### 条件渲染 & v-if
+##### 3. 条件渲染 & v-if
 在JSX中无法使用Vue中的`v-if-else`指令，可以使用Javascript中的运算符`if`或者`三元运算符`代替
 ```javascript
 // if运算符
@@ -76,7 +76,7 @@ render(h) {
 }
 ```
 
-##### 列表 & v-for
+##### 4. 列表 & v-for
 在JSX中可以通过`map`实现`v-for`
 ```javascript
 render: (h) => {
@@ -258,7 +258,6 @@ export default {
             )
           }
         }
-
       ]
     }
   }
