@@ -123,10 +123,10 @@ render: (h) => {
 ## 使用场景 & 实践
 Vue 推荐在绝大多数情况下使用模板来创建你的 HTML。但是在开发过程中`template`并不能满足我们的所有需求，在一些组件开发中比较常见
 
-> 下面是我在工作中根据业务场景对Element UI中的table组件进行的扩展，或许可以加深一些对JSX的理解
+> 下面是我在工作中根据业务场景对Element UI中的table组件进行的扩展，或许可以加深一些对JSX的理解.
 
 
-在开发后台管理系统时，所有不可避免的要进行大量数据列表的展示。目前比较流行的第三方组件库 Element UI，其列表渲染的代码如下：
+在开发后台管理系统时，不可避免的要进行大量数据列表的展示。目前比较流行的第三方组件库 Element UI，其列表渲染的代码如下：
 ```javascript
 <el-table :data="list">
   <el-table-column prop="name" lable="姓名" width="150" align="center"></el-table-column>
@@ -265,7 +265,7 @@ export default {
 </script>
 ```
 渲染效果：
-![](https://github.com/pluckychuang/blog/blob/master/doc/img/jsx_demo.png?raw=true)
+![](https://user-gold-cdn.xitu.io/2019/10/15/16dd00b1ca04ddb1?w=1876&h=168&f=png&s=7305)
 
 ## 参考
 - [react API](https://zh-hans.reactjs.org/docs/introducing-jsx.html)
