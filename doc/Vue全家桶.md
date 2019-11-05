@@ -63,3 +63,7 @@ function defineActive() {
 }
 ```
 
+
+## vue domDiff
+
+
