@@ -1,4 +1,25 @@
 
+## 一、组件通信
+### 1.dispatch
+
+### 2.broadcast
+
+### 3.eventbus
+将监听的事件存放到events中，通过emit调用对应的回调函数
+```js
+{
+    events: {
+        eventName: callback,
+        ...
+    },
+    on(eventName, callback) {
+        this.events[eventName] = callback
+    },
+    emit(eventName) {
+        this.events[eventName]()
+    }
+}
+```
 
 
 # lodash
