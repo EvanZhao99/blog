@@ -10,7 +10,7 @@
   
 prototype本身就是一个普通的js对象   
 
-类似pubsub pattern 发布/订阅模式，发布者publisher与订阅者subscriber，与其他的普通js对象并没有本质的区别，只是一个约定而已 
+类似pubsub pattern 发布/订阅模式，发布者publisher与订阅者subscriber，与其他的普通js对象并没有本质的区别，只是一个约定而已
 
 类比生活中的海军和空军，退役后都是普通人  
 
@@ -67,7 +67,8 @@ configurable特性表示对象的属性是否可以被删除，以及除writable
 属性是否可以在`for...in`和`Object.keys()`中被枚举到
 #### 4. get
 #### 5. set(newValue)
-## 函数式编程(FP)
+
+## 四. 函数式编程(FP)
 ### Monad/Monoid ??
 
 ## MutationObserve
