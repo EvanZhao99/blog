@@ -71,7 +71,7 @@ configurable特性表示对象的属性是否可以被删除，以及除writable
 ## 四. 函数式编程(FP)
 ### Monad/Monoid ??
 
-## MutationObserve
+## 五、MutationObserve
 监听DOM的改变，在指定DOM改变时被调用
 - observe      指定dom、监听内容属性
 - disconnect   取消监听
@@ -99,9 +99,29 @@ if (mutations) {
 
 observer.disconnect();
 ```
-## setImmediate
+## 六、setImmediate
 在其他代码执行完毕会立马执行该回调，用于处理运行时间长的程序
 ```
 var immediateID = setImmediate(func, [param1, param2, ...])
 clearImmediate(immediateID)
+```
+
+## 七、new 操作符
+new操作符一共做了四件事：
+- 创建一个空对象
+- 给对象指定原型
+- 执行构造函数
+- 判断构造函数有没有返回值，没有则返回创建的对象
+
+### 1. 实现
+```js
+function myNew(constructor, ...args) {
+  // 创建空对象
+  let o = {}
+  // 指定原型
+  o.__proto__ = constructor.prototype
+  let res = constructor.call(o, ...args)
+  // 确定返回值，若构造函数的返回值是对象，则将其返回，否则返回新创建的对象o
+  return typeof res === 'object' && res !== null ? res : o
+}
 ```
