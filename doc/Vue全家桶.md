@@ -20,9 +20,30 @@
     }
 }
 ```
+## 二、Vue.use
+use方法使用时，默认会调用内部的`install`方法  
+install方法主要做三件事：
+- 注册全局组件，component
+- 注册全局指令--directive
+- 给原型添加方法、属性--vm.$methodName
 
+## 三、vm.$mount
+将虚拟dom转换成真实dom，如果指定挂载点，则替换挂载点
+### 1.使用
+```js
+// 创建vdom
+let vm = new Vue({
+  render(h) {
+    return h('div',{}, 'hello')
+  }
+})
+// 将vdom转换成dom
+vm.$mount()
+// 拿到dom 插入body中
+document.body.appendChild(vm.$el)
+```
 
-# lodash
+## lodash
 - deepClone 源码？？？
 - 
 # 打包 发布npm
