@@ -42,6 +42,74 @@ vm.$mount()
 // 拿到dom 插入body中
 document.body.appendChild(vm.$el)
 ```
+## 四、具名插槽和作用域插槽
+### 1.具名插槽
+```js
+// component
+<div>
+    <slot name="default"></slot>
+    <slot name="other"></slot>
+</div>
+
+// parant
+<div>
+    <component v-slot:default>
+        default
+    </component>
+    <component v-slot:other>
+        other
+    </component>
+</div>
+
+```
+
+### 2.作用域插槽
+```js
+// component
+// 通过绑定TODO，暴露数据list给父级组件使用
+<div>
+    <slot name="default" :todo="list"></slot>
+    <slot name="other" v-bind:todo="list"></slot>
+</div>
+
+// parant
+// 父级的插槽内容中可以访问子组件的数据
+<div>
+    <component>
+        <template v-slot:default="todo">
+            default:{{todo}}
+        </templat3e>
+    </component>
+    <component>
+        <template v-slot:other="todo">other:{{other}}</templat3e>
+    </component>
+</div>
+
+```
+> 作用域插槽的内部工作原理是将插槽内容包括在一个传入单个参数的函数里  
+> 
+    ```js
+    function(slotPropers) {
+        // 插槽内容
+    }
+
+    ```
+> 因此，`v-slot`的值可以是任何能够作为函数参数的表达式
+
+### 3.动态插槽
+`v-slot`支持动态指令参数，用来定义插槽名
+```js
+<base-layout>
+  <template v-slot:[slotName]>
+    ...
+  </template>
+</base-layout>
+// slotName是vm.data的一个属性
+```
+### 4. 具名插槽缩写
+v-slot:slotName=“slotPropers” 等价于：
+#slotName=“slotPropers”
+
 
 ## lodash
 - deepClone 源码？？？
