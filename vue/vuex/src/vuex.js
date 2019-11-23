@@ -125,12 +125,12 @@ class Store{
   subscribe(fn) {
     this._subscribers.push(fn)
   }
-  // commit = (mutationName, payload) => {
-  //   this.mutations[mutationName](payload)
-  // }
-  // dispatch = (actionName, payload) => {
-  //   this.actions[actionName](payload)
-  // }
+  commit(mutationName, payload) {
+    this.mutations[mutationName](payload)
+  }
+  dispatch(actionName, payload) {
+    this.actions[actionName](payload)
+  }
   get state() {
     return this.s.state
   }
