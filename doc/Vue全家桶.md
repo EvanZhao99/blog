@@ -53,11 +53,13 @@ document.body.appendChild(vm.$el)
 
 // parant
 <div>
-    <component v-slot:default>
-        default
+    <component>
+        <template v-slot:default>
+            default:{{todo}}
+        </templat3e>
     </component>
-    <component v-slot:other>
-        other
+    <component>
+        <template v-slot:other>other:{{other}}</templat3e>
     </component>
 </div>
 
@@ -78,7 +80,7 @@ document.body.appendChild(vm.$el)
     <component>
         <template v-slot:default="todo">
             default:{{todo}}
-        </templat3e>
+        </template>
     </component>
     <component>
         <template v-slot:other="todo">other:{{other}}</templat3e>
@@ -109,6 +111,132 @@ document.body.appendChild(vm.$el)
 ### 4. 具名插槽缩写
 v-slot:slotName=“slotPropers” 等价于：
 #slotName=“slotPropers”
+
+## 五、mixin
+### 1、介绍
+mixin是用来分发Vue组件中可复用功能的一种方式。  
+`mixin`是一个普通的*js对象*，可以包含任意的组件选项。  
+使用mixin的组件会拥有对应的选项，类似于继承。
+### 2.选项合并
+- 数据对象内部进行递归合并，发生冲突时组件的数据优先
+- 同名钩子函数会合并为数组，都会被调用。并且mixin顺序在前
+- 值为对象的选项被合并为一个对象，键名冲突的组件优先
+
+> 类似Vue.extend策略：能合并的合并，不能合并的组件优先
+### 2. 全局混入
+`Vue.mixin`可以进行全局注册，将影响每一个之后创建的Vue实例
+
+## 六、Vue自定义指令
+### 1.简介
+自定义指令主要用于对原生DOM进行底层操作
+### 2.钩子
+- bind：指令绑定时，只调用一次
+- inserted: 元素被插入到父节点（不一定被插入到文档中）
+- update：组件的vnode更新时
+- componentUpdated: 组件及其子组件的VNode全部更新完毕时
+- unbind:指令与元素解绑时
+
+### 3.钩子函数参数
+- el:绑定的元素，可以直接操作DOM
+- binding：一个对象，包含以下属性
+  - name: 指令名
+  - value： 指令绑定的值
+  - oldValue: 指令绑定的前一个值
+  - expression: 字符串形式的指令表达式
+  - arg: 传给指令的参数
+  - modifiers:修饰符
+- vnode:Vue编译产生的虚拟节点
+- oldVnode:上一个虚拟节点
+> 除了el,其他的都是只读属性
+### 4. 全局指令
+```js
+Vue.directive('directiveName', {
+    inserted(el, binding) {
+        // todo
+    }
+})
+```
+### 5.组件指令
+```js
+{
+    direcrives: {
+        directiveName: {
+            inserted: function(el, binding) {
+                // todo
+            }
+        }
+    }
+}
+```
+### 6.动态指令参数
+指令的参数可以是动态的`v-mydirective:[argument]="value"`
+```js
+<template v-slot:[slotname]="slotPropers"></template>
+```
+### 7.函数简写
+在`bingd`和`update`时触发相同的行为而不关心其他钩子是，可以使用简写：
+```js
+Vue.directive('directiveName', function(el, bingding) {
+    // todo
+})
+```
+
+## 七、插件
+### 1.功能
+没有严格限制，一般有三种用途：
+- 全局组件：Vue.component
+- 全局指令：Vue.directive
+- 实例属性和方法：vm.$xxx
+
+### 2.使用
+通过全局方法Vue.use()使用插件
+```js
+Vue.use(myPlugin, options)
+```
+### 3.开发
+Vue会自动调用插件的`install`方法，两个参数：
+- Vue: Vue构造器
+- options： 选项
+```js
+myPlugin = {
+    install(Vue, options) {
+        Vue.directive("directiveName", {
+            bind(el, binding) {
+                // todo
+            }
+        })
+        Vue.mixin({
+            created: function() {
+                this.$methodName = function() {
+                    // todo
+                }
+            }
+        })
+        Vue.prototype.$methodName = function() {
+            // todo
+        }
+    }
+}
+```
+
+## 八、过滤器
+Vue.filter不改变数据，只改变用户看到的输出。使用管道符（pipeline）隔开
+```js
+Vue.filter('toRMB', function(value){
+    return value && '￥' + value
+})
+<span>{{price | toRMB}}</span>
+
+```
+
+
+
+
+
+
+
+
+
 
 
 ## lodash
