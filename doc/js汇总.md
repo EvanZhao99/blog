@@ -146,3 +146,12 @@ function myNew(constructor, ...args) {
 ## 十、JS数据存储
 - 基本数据类型用`栈`存储，引用数据类型用`堆`存储
 - 闭包遍历用`堆`存储
+
+### 基本类型
+- boolean
+- string
+- number
+- null
+- undifined
+- symbol
+- bigint

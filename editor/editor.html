@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    strong{
+      color: red
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div id="editor" contenteditable="true"></div>
+    <div class="toolbar">
+      <button onclick="editor.boldFont()">加粗</button>
+    </div>
+  </div>
+</body>
+<style>
+#editor{
+  width: 1000px; 
+  height: 300px;
+  border: 1px solid red
+}
+</style>
+</html>
+<script>
+(function(global) {
+  // 获取光标位置元素
+  let currentEl = null
+  let editorEl = document.getElementById('editor')
+  document.body.onmouseover = function(e) {
+    currentEl = e.target
+    // let range = getSelection().getRangeAt(0)
+    // console.log(range)
+  }
+  let editor = global.editor = {}
+  let bold = false
+  let range = {}
+  editor.boldFont = function() {
+    // document.execCommand('bold', false)
+    bold = !bold
+    range = getSelection().getRangeAt(0)
+    if(bold) {
+      let strong = range.createContextualFragment("<strong>&#8203;</strong>")
+      let lastNode = strong.lastChild
+      range.insertNode(strong)
+      console.log(range)
+      range.setStart(lastNode,1)
+      range.setEnd(lastNode, 1)
+      resetRange(lastNode, 1, lastNode, 1)
+    } else {
+      document.execCommand('insertHTML', false, '&#8203;')
+    }
+    
+  }
+  function resetRange(startContainer, startOffset, endContainer, endOffset) {
+    let selection = window.getSelection();
+        selection.removeAllRanges();
+    let range = document.createRange();
+    range.setStart(startContainer, startOffset);
+    range.setEnd(endContainer, endOffset);
+    selection.addRange(range);
+    document.execCommand('insertHTML', false, '')
+}
+})(window)
+</script>
