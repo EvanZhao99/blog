@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    <div id="editor" contenteditable="true"></div>
+    <div class="toolbar">
+      <button onclick="editor.boldFont()">加粗</button>
+    </div>
+  </div>
+</body>
+<style>
+#editor{
+  width: 1000px; 
+  height: 300px;
+  border: 1px solid red
+}
+</style>
+</html>
+<script>
+(function(global) {
+  let editor = global.editor = {}
+  editor.boldFont = function() {
+    document.execCommand('bold', false)
+  }
+})(window)
+</script>
