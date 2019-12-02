@@ -155,3 +155,10 @@ function myNew(constructor, ...args) {
 - undifined
 - symbol
 - bigint
+
+## 十一、顶部导航栏切换动画
+### 1 思路
+- 布局：nav1与nav2上下罗列，父级容器设置overflow：hidden，只显示一个
+- 通过transform:stranslateY(50%)切换，transition：transform实现过渡
+- 监听window的sroll事件，通过scrollTop判断滚动方向
+- 节流函数处理导航栏的切换
