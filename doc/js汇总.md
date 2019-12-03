@@ -147,7 +147,7 @@ function myNew(constructor, ...args) {
 - 基本数据类型用`栈`存储，引用数据类型用`堆`存储
 - 闭包遍历用`堆`存储
 
-### 基本类型
+### js数据类型
 - boolean
 - string
 - number
@@ -155,6 +155,8 @@ function myNew(constructor, ...args) {
 - undifined
 - symbol
 - bigint
+- Object
+> 除了Object都是基本数据类型
 
 ## 十一、顶部导航栏切换动画
 ### 1 思路
