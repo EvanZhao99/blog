@@ -39,5 +39,29 @@ s.description // 'foo'
 ### 4. 作为属性名
 
 ### 5. 属性名遍历
-symbol作为属性名，遍历对象的时候，该属性不会出现在`for...in``for...of`循环中，也不会被`Object.keys()``Object.getOwnPropertyNames()``JSON.stringify()`返回  
-但是，它不是私有属性，可以通过`Object.getOwnPropertyNames()`获取
+symbol作为属性名，遍历对象的时候，该属性不会出现在`for...in``for...of`循环中，也不会被`Object.keys()``Object.getOwnPropertyNames()``JSON.stringify()`返回。可以借此特点实现非私有的内部方法
+### 6. 获取方式
+#### 6.1 Object.getOwnPropertySymbols()
+获取所有symbol属性名
+#### 6.2 Reflect.ownKeys()
+返回所有类型的属性名
+
+### 7 Symbol.for()、Symbol.keyFor()
+`Symbol.for()`创建一个新的symbol，并将其登记在全局环境中供搜索，下次调用时先检查是否存在该key值对应的symbol，存在就直接返回，不存在就新建。
+> 可以在不同的iframe或service worker中取到同一个值  
+
+`Symbol.keyFor()`返回一个已登记的Symbol类型的key,不会返回`Symbol()`创建的symbol的key
+
+### 8. 内置的Symbol值
+。。。
+
+## 二、模块
+### 1.标准
+- commentjs
+- AMD
+- es
+
+#### 1.1为什么ES模块比CommenJS更好？
+ES是官方标准，也是JS语言明确的发展方向，而CommentJS模块是ES出来之前的一种临时解决方案。ES模块支持`静态分析`，从而实现向tree-shaking、按需加载等优化，并提供循环引用和动态绑定等功能。  
+
+CommenJS的模块是在执行的时候加载的，会创建一个模块对象，通过这个对象去访问模块的属性和方法，代码会被全部加载进来。
