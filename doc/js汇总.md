@@ -164,3 +164,9 @@ function myNew(constructor, ...args) {
 - 通过transform:stranslateY(50%)切换，transition：transform实现过渡
 - 监听window的sroll事件，通过scrollTop判断滚动方向
 - 节流函数处理导航栏的切换
+
+## 十二、数组
+- push: 从数组最后添加一个， 并返回数组的长度
+- pop: 从数组最后删除一个，并返回该值
+- shift: 从数组开头删除一个，并返回该值
+- unshift: 从数组开头添加一个， 并返回数组的长度
