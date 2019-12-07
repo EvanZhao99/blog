@@ -1,6 +1,7 @@
 
 const mergeConfig = require('./mergeConfig')
 const InterceptorManage = require('./interceptorManage')
+const dispatchRequest = require('./dispatchRequest')
 
 /**
  * axios构造函数
@@ -40,6 +41,7 @@ Axios.prototype.request = function request(config) {
 
   // Hook up interceptors middleware
   // 链接拦截器中间件
+  // 请求发送放到中间，请求拦截放在前面，响应拦截后面；通过promise链式调用
   let chain = [dispatchRequest, undefined] 
   let promise = Promise.resolve(config)
 
