@@ -170,3 +170,6 @@ function myNew(constructor, ...args) {
 - pop: 从数组最后删除一个，并返回该值
 - shift: 从数组开头删除一个，并返回该值
 - unshift: 从数组开头添加一个， 并返回数组的长度
+
+## 十三、Number
+- Number.MAX_SAFE_INTEGER: js中最大的安全整数（2^53 - 1）
