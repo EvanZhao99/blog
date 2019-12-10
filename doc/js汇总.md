@@ -191,3 +191,78 @@ function myNew(constructor, ...args) {
 ### 2. base64格式
 把每3字节（Byte）也就是24位（bit)，转换位4个6位的字节(3 * 8 = 4 * 6)，然后把6bit高位添加两位0，组成4个8bit的字节。理论上会比原来长1/3。
 
+## 十五、XHR
+### 1. use
+```js
+let request = new XMLHttpRequest()
+request.open('GET', 'http://www.example.org/example.txt', true)
+request.onreadystatechange = function handleLoad() {
+  if(!request || request.readyState !== 4) {
+    return 
+  }
+  let res = request.response
+}
+request.send()
+```
+### 2. Properties
+#### 1. readystate
+- 0: UNSENT; 调用`open()`之前
+- 1: OPENDE; 调用`open()`
+- 2：HEADERS_RECEIVED; 调用`send()`
+- 3: LOADING
+- 4: DONE;结束
+
+#### 2. response
+根据`responseType`返回相应的数据。types有以下几种：
+- default：text
+- arraybuffer:包含二进制数据的`ArrayBuffer`
+- blob
+- document: html或者xml
+- json
+- text
+
+#### 3. responseText
+#### 4. responseType
+#### 5. responseURL
+#### 6. responseXML
+#### 7. status
+- UNSET: 0
+- OPENED: 0
+- LOADING: 200
+- DONE: 200
+#### 8. timeout
+设置过期时间
+
+#### 9. upload
+监控数据上传对象
+```js
+
+xhr.upload.onloadstart = function() {}
+xhr.upload.onprogress = function() {}
+xhr.upload.onabort = function() {}
+xhr.upload.onerror = function() {}
+xhr.upload.onload = function() {}
+xhr.upload.ontimeout = function() {}
+xhr.upload.onloadend = function() {}
+```
+
+#### 10. withCredentials
+
+### 2. Events
+- load: 请求成功结束
+- abort: 取消
+- error
+- load
+- loadend
+- loadstart
+- progress
+- timeout
+
+### 3. methods
+- abort
+- getAllResponseHeaders
+- getResponseHeader
+- open
+- send
+- setRequestHeader
+
