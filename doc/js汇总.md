@@ -266,3 +266,17 @@ xhr.upload.onloadend = function() {}
 - send
 - setRequestHeader
 
+## 十六、安全
+### 1. CSRF(cross-site request forgery) 跨站请求伪造
+攻击者盗用用户的cookie执行非用户本意的操作
+#### 1. 场景
+例如一家银行转账操作的URL是: http://www.examplebank.com/withdraw?account=AccoutName&amount=1000&for=PayeeName  
+那么，恶意攻击者可以在另一个网站放置如下代码：<img src="http://www.examplebank.com/withdraw?account=Alice&amount=1000&for=Badman">  
+如果用户刚访问了银行网站，并且登录信息未过期，那么恶意网站就可以冒充用户身份执行恶意代码，用户将损失1000资金。
+
+#### 2. 防御
+- 检查referer
+- 添加token校验
+
+### 2 XSS
+网站中注入恶意代码。通常是输入框中包含js代码

@@ -1,5 +1,16 @@
-
-
+/**
+ * @file xhr
+ * @progress finish
+ * @思路 1）创建xhr对象；2）调用open（）；3）监听readystatechange，处理response；
+ *      4）处理request headers；5）根据需求监听各种事件
+ */
+var utils = require('./../utils');
+var settle = require('./../core/settle');
+var buildURL = require('./../helpers/buildURL');
+var buildFullPath = require('../core/buildFullPath');
+var parseHeaders = require('./../helpers/parseHeaders');
+var isURLSameOrigin = require('./../helpers/isURLSameOrigin');
+var createError = require('../core/createError');
 
 module.exports = function xhrAdaper(config) {
   // 发送xhr请求，并返回一个promise
@@ -20,6 +31,7 @@ module.exports = function xhrAdaper(config) {
       let password = config.auth.password || ''
       // base64编码字符串转ASCII
       requestHeaders.Authorization = 'Basic' + btoa(username + ":" + password)
+    }
 
       let fullPath = buildFullPath(config.baseURL, config.url)
       // xhr.open
@@ -93,7 +105,6 @@ module.exports = function xhrAdaper(config) {
         // Clean up request
         request = null
       }
-    }
 
     // Add xsrf header
     // This is only done if runnig in a standard browser environment
