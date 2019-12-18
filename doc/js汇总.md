@@ -280,3 +280,4 @@ xhr.upload.onloadend = function() {}
 
 ### 2 XSS
 网站中注入恶意代码。通常是输入框中包含js代码
+
