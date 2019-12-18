@@ -10,3 +10,5 @@ Router.install = function (_Vue) {
     return 
   }
 }
+
+export default Router
