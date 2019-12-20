@@ -9,6 +9,15 @@ webpack 是一个现代js应用程序的静态模块打包器(module bundler)。
 ### 2 什么是plugin？
 在webpack 构建流程中的特定时机注入扩展逻辑来改变构建结果或者做你想要的事情。类似vue钩子函数
 
+- purgecss-webpack-plugin
+    > webpack plugin to remove unused css  
+    > 压缩css代码
+
+
+
+
+- 预加载：preload/prefetch
+- 魔法字符串
 - 根据依赖将文件打包成一个bundle，往HTML中插入一个script标签，引入该文件
 - npx 新版本出的功能
 - 在没有webpack.config.js文件的情况下，webpack 会自动读取src/index.js文件
@@ -99,3 +108,5 @@ console.log('hello world')
 npx webpack
 ```
 > `webpack`会默认查找项目下`src/index.js`文件，并生成`dist`文件夹，将打包后的文件放入该文件夹中
+
+
