@@ -68,7 +68,7 @@ module: {
 npm5.2新加的功能   
 `npx webpack`,npx会查找指定包中的可执行文件，如果该包不存在会先下载后执行。
 
-## 入门起步
+## 一、入门起步
 1. 建一个文件夹
 ```
 mkdir webpack_first\ 
@@ -99,3 +99,10 @@ console.log('hello world')
 npx webpack
 ```
 > `webpack`会默认查找项目下`src/index.js`文件，并生成`dist`文件夹，将打包后的文件放入该文件夹中
+
+## 二、代码分离
+三种常用的代码分离的方式：
+- 多入口：使用`entry`手动设置多个入口
+- 防止重复：使用 `optimization.splic`对公共依赖进行抽离
+- 动态导入：使用`import(/* webpackChunkName: "lodash" */ 'lodash')`
+    > 会自动将引入的依赖单独打包，在调用时加载
