@@ -1,21 +1,4 @@
-# webpack
-## 什么是webpack?
-webpack 是一个现代js应用程序的静态模块打包器(module bundler)。  
-当webpack处理应用程序时，它会递归构建一个依赖关系图（dependency graph）,其中包含应用程序需要的所有模块，然后生成一个或多个bundle
-
-### 1 什么是loader？
-模块转换器，用于把模块原内容按照需求转换成新内容，可以加载非js模块
-
-### 2 什么是plugin？
-在webpack 构建流程中的特定时机注入扩展逻辑来改变构建结果或者做你想要的事情。类似vue钩子函数
-
-- purgecss-webpack-plugin
-    > webpack plugin to remove unused css  
-    > 压缩css代码
-
-
-
-
+## tem
 - 预加载：preload/prefetch
 - 魔法字符串
 - 根据依赖将文件打包成一个bundle，往HTML中插入一个script标签，引入该文件
@@ -43,6 +26,40 @@ webpack 是一个现代js应用程序的静态模块打包器(module bundler)。
 - html-webpack-plugin: 默认创建一个HTML，并引入打包后的bundle。也可以指定HTML模板
 - clean-webpack-plugin: 清空目录
 - copy-webpack-plugin: 复制文件目录
+- purgecss-webpack-plugin: 删除无用的css
+- 打包类库：需要配置webpack的output--`libraryTarget:‘commenjs2’`
+- dllreferenceplugin: 提高webpack打包速度
+
+### 请求数据三种方式
+- 本地 -> 代理 -> 服务器
+- 本地 -> 前端服务器 
+- 后端启用webpack  做服务端渲染
+
+
+
+
+
+
+
+# webpack
+## 什么是webpack?
+webpack 是一个现代js应用程序的静态模块打包器(module bundler)。  
+当webpack处理应用程序时，它会递归构建一个依赖关系图（dependency graph）,其中包含应用程序需要的所有模块，然后生成一个或多个bundle
+
+### 1 什么是loader？
+模块转换器，用于把模块原内容按照需求转换成新内容，可以加载非js模块
+
+### 2 什么是plugin？
+在webpack 构建流程中的特定时机注入扩展逻辑来改变构建结果或者做你想要的事情。类似vue钩子函数
+
+- purgecss-webpack-plugin
+    > webpack plugin to remove unused css  
+    > 压缩css代码
+
+
+
+
+
 ## 一、 bable:
 - presets:预设
 默认设置多个常见plugein,例如‘plugin-transform-class’、'plugin-transform-for-of'
@@ -77,7 +94,7 @@ module: {
 npm5.2新加的功能   
 `npx webpack`,npx会查找指定包中的可执行文件，如果该包不存在会先下载后执行。
 
-## 一、入门起步
+## 入门起步
 1. 建一个文件夹
 ```
 mkdir webpack_first\ 
@@ -109,13 +126,4 @@ npx webpack
 ```
 > `webpack`会默认查找项目下`src/index.js`文件，并生成`dist`文件夹，将打包后的文件放入该文件夹中
 
-<<<<<<< HEAD
 
-=======
-## 二、代码分离
-三种常用的代码分离的方式：
-- 多入口：使用`entry`手动设置多个入口
-- 防止重复：使用 `optimization.splic`对公共依赖进行抽离
-- 动态导入：使用`import(/* webpackChunkName: "lodash" */ 'lodash')`
-    > 会自动将引入的依赖单独打包，在调用时加载
->>>>>>> 8dccd7698c0b49a559cb96f40f495549b4a71ad9
