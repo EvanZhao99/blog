@@ -10,15 +10,15 @@ module.exports = env => {
       // 'anotherModule': './src/another-module.js'
     },
     output: {
-      filename: '[name].bundle.js',
+      filename: '[name].bundle.[chunkhash].js',
       path: path.resolve(__dirname, 'dist'),
-      chunkFilename: '[name].bundle.js' // 决定非主入口的bundle名称
+      chunkFilename: '[name].bundle.[chunkhash].js' // 决定非主入口的bundle名称
     },
-    // optimization: {
-    //   splitChunks: {
-    //     chunks: 'all'
-    //   }
-    // },
+    optimization: {
+      splitChunks: {
+        chunks: 'all'
+      }
+    },
     devServer: {
       contentBase: './dist'
     },

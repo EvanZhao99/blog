@@ -1,20 +1,27 @@
-
+import * as ykyNumbers from 'yky-numbers'
+import _ from 'lodash'
 
 function getComponent() {
+  let element = document.createElement('div')
   return import(/* webpackChunkName: "lodash" */ 'lodash').then(_ => {
-    let element = document.createElement('div')
-
-    element.innerHTML = _.join(['hello', 'world', '!'])
+    
+    element.innerHTML = _.join(['hello', 'world', '!', ykyNumbers.numToWord(0)])
 
     return element
-  }).catch(err => 'An error occurred while loading kthi component')
+  }).catch(err => {
+    element.innerHTML = err
+    return element
+  })
+
 }
-
-
 
 setTimeout(() => {
   getComponent().then(component => {
     document.body.appendChild(component)
   })
-}, 3000);
+}, 3000)
+
+
+
+
 

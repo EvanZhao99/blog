@@ -109,13 +109,21 @@ npx webpack
 ```
 > `webpack`会默认查找项目下`src/index.js`文件，并生成`dist`文件夹，将打包后的文件放入该文件夹中
 
-<<<<<<< HEAD
-
-=======
 ## 二、代码分离
 三种常用的代码分离的方式：
 - 多入口：使用`entry`手动设置多个入口
 - 防止重复：使用 `optimization.splic`对公共依赖进行抽离
 - 动态导入：使用`import(/* webpackChunkName: "lodash" */ 'lodash')`
     > 会自动将引入的依赖单独打包，在调用时加载
->>>>>>> 8dccd7698c0b49a559cb96f40f495549b4a71ad9
+
+## 三、缓存
+对于一些不经常修改的资源，可以通过`命中缓存`来降低网络流量，优化加载速度
+
+1. 采用`chunkhash`生成哈希，通过`output.filename`进行文件名替换，确保浏览器获取到修改后的文件
+2. 通过`HashedModuleIdsPlugin`解决`moduleId`改变导致的`chunkhash`改变
+
+## 四、创建libray
+- 通过`webpack.externals`将依赖外部化
+- 通过`output.filename`设置Libray的名称
+- 通过`output.library`暴露全局变量， 通过`output.libraryTarget`设置暴露方式
+- 在packge.js中知道bundle的路径`"mail: "dist/webpack-numbers.js""`
