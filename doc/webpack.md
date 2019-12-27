@@ -16,11 +16,9 @@ webpack 是一个现代js应用程序的静态模块打包器(module bundler)。
 
 
 
-- 预加载：preload/prefetch
+
 - 魔法字符串
 - 根据依赖将文件打包成一个bundle，往HTML中插入一个script标签，引入该文件
-- npx 新版本出的功能
-- 在没有webpack.config.js文件的情况下，webpack 会自动读取src/index.js文件
 - 代码模块会打包成一个对象：key是路径名，值是function（eval执行代码字符串）
 - --config：指定webpack配置文件目录
     ```js
@@ -127,3 +125,36 @@ npx webpack
 - 通过`output.filename`设置Libray的名称
 - 通过`output.library`暴露全局变量， 通过`output.libraryTarget`设置暴露方式
 - 在packge.js中知道bundle的路径`"mail: "dist/webpack-numbers.js""`
+
+## 五、预加载：preload与prefetch
+### preload
+当前页面需要的资源
+#### 1优先级
+当设置`as`属性时，根据其值确定优先级，否则等同于异步
+
+### prefetch
+其他页面需要的资源
+#### 1 优先级
+在浏览器空闲的时候加载
+
+## 六、pwa
+1. 使用`workbox-webpack-plugin`生成Service Worker文件
+    ```js
+    new WorkboxPlugin.GenerateSW({
+        clientsClaim: true,
+        skipWaiting: true
+    })
+    ```
+2. 注册Service Worker
+    ```js
+
+    if('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').then(registration => {
+                console.log('SW registered: ', registration)
+            }).catch(registrationError => {
+                console.log('SW registration failed:', registrtionError)
+            })
+        })
+    }
+    ```
