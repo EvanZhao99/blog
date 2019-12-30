@@ -70,4 +70,10 @@ CommenJS的模块是在执行的时候加载的，会创建一个模块对象，
 commenjs 动态的  
 es6module 静态的
 
+### 2. 打包工具
+#### 1. rollup:
+- 导出es模块（es比commenJS有优势）
+- 支持程序流分析，能更加正确的判断项目本身的代码是否有副作用（tree shaking打包更纯粹）
+
+
 
