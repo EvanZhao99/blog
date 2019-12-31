@@ -1,22 +1,7 @@
 
 
 ## tem
-- provideplugin 
-- expose
-- addAssetHtmlCdnWebpackPlugin: 引入cdn插件
-- 热更新的原理是websocket
-- import() 返回的是promise
-- prefech与preload的区别
-- ignorePlugin moment语言包非常大,需要忽略 
-- dllPlugin: 动态链接库，不需要每次都重新构建第三方库，优化打包速度
-    > 1.将依赖打包成库； 2. 通过`dllPlugin`创建manifest.json; 3. 通过addAssetHtmlPlugin
-
-- resolve：减少查找范围，只找当前目录下的
-- happypack: 开子进程打包
-- 优化手段：代码分割  cdn  dllplugin  splitChunks  happypack
-- process.cwd() 拿到当前的目录名
-- resolveLoader
-- inlineloader
+  
 
 ```js
 module: {

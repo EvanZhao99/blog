@@ -13,16 +13,41 @@ class Compiler {
         this.entryId = '' // 入口
         this.root = process.cwd() // 运行命令的位置
         this.modules = {} // 所有的依赖关系
+
+        // 声明钩子
         this.hooks = {
             entryOption:new SyncHook(['compiler']),
             emitFile: new SyncHook(['compiler']),
             parse: new SyncHook(['compiler'])
         }
+        // 调用plugin
+        config.plugins.forEach(instance => {
+            instance.apply(this)
+        })
 
-        // console.log(this.root)
     }
     getSource(modulePath) {
-        return fs.readFileSync(modulePath, 'utf8')
+        let source = fs.readFileSync(modulePath, 'utf8')
+
+        let rules = this.config.module.rules
+        for(let i = 0; i < rules.length; i++) {
+            let {test: reg, use} = rules[i]
+            console.log(reg,reg.test(modulePath))
+            if(reg.test(modulePath)) {
+                // 需要先定位到最后一个 [style-loader, less-loader]
+                let len = use.length -1
+                function normalLoader() {
+                    let loader = use[len--]
+                    if(loader) {
+                        let l = require(loader)
+                        source = l(source)
+                        normalLoader() //取下一个loader
+                    }
+                }
+                normalLoader()
+            }
+        }
+        return source
     }
     // 解析source
     parser(source, parentDir) {
@@ -46,6 +71,7 @@ class Compiler {
         })
         // 重新生成树
         let r = generator(ast)
+        this.hooks.parse.call(this)
         return {r: r.code, dependencies}
     }
     buildModule(modulePath, isMain) {
@@ -73,7 +99,7 @@ class Compiler {
         })
         let {filename, path: p} = this.config.output
 
-        // 存放资源
+        // 将内容写入文件 存放资源
         this.assets = {
             [filename]: str
         }
@@ -83,7 +109,10 @@ class Compiler {
         this.hooks.emitFile.call(this)
     }
     run() {
+        // 依赖构建 调用loader编译
         this.buildModule(path.join(this.root, this.entry), true)
+        // 用模板生成一个 输出的文件
+        this.emitFile()
     }
 }
 module.exports = Compiler

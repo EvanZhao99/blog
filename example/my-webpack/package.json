@@ -16,6 +16,7 @@
     "@babel/generator": "^7.7.7",
     "@babel/traverse": "^7.7.4",
     "babylon": "^6.18.0",
+    "ejs": "^3.0.1",
     "webpack": "^4.41.5"
   },
   "devDependencies": {
