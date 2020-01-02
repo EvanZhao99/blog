@@ -2,6 +2,14 @@ const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 
+class MyPlugin{
+  apply(compiler) {
+    compiler.hooks.done.tap('MyPlugin', function() {
+      console.log('compiler完成~~~~~~~~~~~~~~~~~~~~~~·')
+    })
+  }
+}
+
 module.exports = env => {
   return {
     mode: 'development',
@@ -22,11 +30,32 @@ module.exports = env => {
     devServer: {
       contentBase: './dist'
     },
+    resolveLoader: {
+      modules: [
+        path.resolve(__dirname, 'node_modules'),
+        path.resolve(__dirname, 'loaders')
+      ]
+    },
+    module: {
+      rules: [
+        {
+          test: /\.less$/,
+          use: ['style-loader','less-loader']
+        },
+        {
+          test: /\.js$/,
+          use: [
+            'my-loader'
+          ]
+        }
+      ]
+    },
     plugins: [
       new HTMLWebpackPlugin({
         title: 'Code Splitting',
         template: './src/index.html'
-      })
+      }),
+      new MyPlugin(0)
     ]
   }
 }

@@ -60,7 +60,6 @@ symbol作为属性名，遍历对象的时候，该属性不会出现在`for...i
 - commentjs
 - AMD
 - es
-
 #### 1.1为什么ES模块比CommenJS更好？
 ES是官方标准，也是JS语言明确的发展方向，而CommentJS模块是ES出来之前的一种临时解决方案。ES模块支持`静态分析`，从而实现向tree-shaking、按需加载等优化，并提供循环引用和动态绑定等功能。  
 

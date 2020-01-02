@@ -27,8 +27,10 @@ class Compiler {
 
     }
     getSource(modulePath) {
+        // 同步读取代码文件
         let source = fs.readFileSync(modulePath, 'utf8')
 
+        // 递归调用loader 处理源码
         let rules = this.config.module.rules
         for(let i = 0; i < rules.length; i++) {
             let {test: reg, use} = rules[i]
@@ -51,6 +53,7 @@ class Compiler {
     }
     // 解析source
     parser(source, parentDir) {
+        // ast语法树解析代码
         let ast = babylon.parse(source)
         let dependencies = []
         // 遍历树

@@ -1,5 +1,6 @@
 import * as ykyNumbers from 'yky-numbers'
 import _ from 'lodash'
+require('./style.less')
 
 function getComponent() {
   let element = document.createElement('div')

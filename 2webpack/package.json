@@ -17,6 +17,7 @@
     "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
+    "less": "^3.10.3",
     "lodash": "^4.17.15",
     "yky-numbers": "0.0.3"
   }

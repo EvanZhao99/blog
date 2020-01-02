@@ -1,21 +1,6 @@
 
 
 ## tem
-  
-
-```js
-module: {
-    rules: {
-        // 只要引用一次，就会暴露的全局上，不需要再次引入
-        // 当用户引用了jQuery的时候，会触发此loader
-        test: require.resolve('jquery'),
-        use: {
-            loader: 'expose-loader',
-            options: '$' // 别名
-        }
-    }
-}
-```
 
 ## 一、AST
 - 过程：把源代码转化成树，遍历树（深度优先）、修改树、生成树
@@ -48,6 +33,7 @@ module: {
 - esprima 解析语法树；traverse 遍历树； generator 重新生成树
 - babylon           @babel/traverse   @babel/generator
 - @babel/core transform 解析遍历树；
+  
 
 ## 二、webpack实现
 ### 1. 流程
@@ -58,13 +44,52 @@ module: {
 5. 创建依赖谱图 把所有依赖做成列表
 6. 把模板 和 我们解析出来的列表 进行渲染 打包到目标文件中
 
-### 2.loader
-1. loader 引入的四种方式：
-1）绝对路径；2）alias别名；3）resolve.module
 
-2. loader类型：pre normal inline post;   
-`{enforce: 'pre'}`
+## 三. loader实现
 
-3. 特点：职责单一 组合使用
-4. loader分两部分：loader/pitch  
+
+1. 特点：职责单一 组合使用
+2. loader分两部分：loader/pitch  
 先执行pitch，操作文件；再执行loader，编译代码；pitch可以终止loader的执行，通过return可以直接跳到前一个loader节点
+
+### 1. less-laoder
+> 思路：引入`less`模块，调用其`render`函数，将`less`语法转义成`css`语法
+```js
+
+let less = require('less')
+function loader(source) {
+  let css 
+  less.render(source, function(err, r){
+    css = r.css
+  })
+  return css
+}
+module.exports = loader
+```
+
+### 2. style-loader
+> 思路：创建一个`style`标签，引入css代码，插入到HTML文档中
+```js
+function loader(source) {
+  let code = `let style = document.createElement('style')
+    style.innerHTML = ${JSON.stringify(source)}
+    document.head.appendChild(style)
+  `
+  // 回车转成明文的\n(\\n)
+  return code.replace(/\\/g, '\\\\')
+}
+module.exports = loader
+```
+
+
+## 四、plugin实现
+plugin是一个类，包含`apply`函数
+```js
+class A {
+    apply(compiler) {
+        compiler.hooks.parser.tap('pluginName', function() {
+            
+        })
+    }
+}
+```
