@@ -44,6 +44,7 @@ document.body.appendChild(vm.$el)
 ```
 ## 四、具名插槽和作用域插槽
 ### 1.具名插槽
+用`name`区分不同的插槽
 ```js
 // component
 <div>
@@ -66,6 +67,8 @@ document.body.appendChild(vm.$el)
 ```
 
 ### 2.作用域插槽
+在`slot`标签上绑定数据，父级组件就可以通过`v-slot`访问该数据；  
+实现父级组件可以访问子组件的数据
 ```js
 // component
 // 通过绑定TODO，暴露数据list给父级组件使用
@@ -125,7 +128,24 @@ mixin是用来分发Vue组件中可复用功能的一种方式。
 > 类似Vue.extend策略：能合并的合并，不能合并的组件优先
 ### 2. 全局混入
 `Vue.mixin`可以进行全局注册，将影响每一个之后创建的Vue实例
+### 3. example
+```js
+var myMixin = {
+  created: function () {
+    this.hello()
+  },
+  methods: {
+    hello: function () {
+      console.log('hello from mixin!')
+    }
+  }
+}
 
+var Component = Vue.extend({
+  mixins: [myMixin]
+})
+
+```
 ## 六、Vue自定义指令
 ### 1.简介
 自定义指令主要用于对原生DOM进行底层操作
@@ -228,6 +248,13 @@ Vue.filter('toRMB', function(value){
 <span>{{price | toRMB}}</span>
 
 ```
+
+## 九、服务端渲染
+Vue.js是构建客户端应用程序的框架。可以在浏览器中将一个Vue组件，生成DOM或者进行DOM操作。同样，也可以在服务端将同一个组件渲染成HTML字符串，并已文档的形式直接发送到浏览器。  
+对SEO更友好，首屏加载更快；减少对客户端的依赖（浏览器兼容），安全；  
+
+本质上是用CPU换I/O,对服务器压力比较大
+
 
 
 
