@@ -255,6 +255,17 @@ Vue.js是构建客户端应用程序的框架。可以在浏览器中将一个Vu
 
 本质上是用CPU换I/O,对服务器压力比较大
 
+### 流程
+- app.js: 提供工厂函数，构建Vue实例，避免交叉污染
+- entry-server.js: 创建app -> 客户端路由解析 -> 返回app
+- server.js: 服务端路由解析 -> 渲染html字符串 -> 返回给客户端
+- entry-client.js：在router的`onReady`中挂在APP
+
+- 流程：在服务端生成HTML字符串，相当于应用程序的快照，返回给客户端进行渲染；客户端Vue接管此HTML，将其激活，进行交互。
+### tmp
+- 客户端和服务端都有一套vm和router实例，都可进行路由跳转
+
+
 
 
 

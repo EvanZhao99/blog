@@ -75,4 +75,15 @@ es6module 静态的
 - 支持程序流分析，能更加正确的判断项目本身的代码是否有副作用（tree shaking打包更纯粹）
 
 
+## 三、版本与特性
+- es5： 扩展了Object、array、Function的功能
+- es6: 类、模块化、箭头函数、函数参数默认
+- es7: inclues、指数操作符
+- es8: async/await, Object.values(),Object.entries(), String.padding等
+- 
+
+## tem
+- Object.entries: 返回键值对的数组
+
+
 
