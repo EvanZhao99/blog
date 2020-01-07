@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="create()">create</button>
+    <img crossOrigin="Anonymous" id="model" src="https://public-img.51easymaster.com/image/37f4e6f4f46c09c2e69a.svg" alt="">
+    <img crossOrigin="Anonymous" id="img" src="http://img2.imgtn.bdimg.com/it/u=3195330135,317485367&fm=15&gp=0.jpg" alt="">
+    <canvas id="canvas" width="200px" height="200px" style="border: 1px solid red;"></canvas>
+</body>
+</html>
+<script>
+(function(global) {
+    function create() {
+        let canvas = document.getElementById('canvas')
+        let ctx = canvas.getContext('2d')
+        // 模板图片
+        let modelImg = document.getElementById('model')
+
+        // 填充纯黑色
+        ctx.fillStyle = '#000000'
+        ctx.fillRect(0, 0, 200, 200)
+
+        let img = document.getElementById('img')
+        ctx.drawImage(modelImg, 0, 0, 200, 200)
+
+        let imageData = ctx.getImageData(0, 0, 200, 200)
+        let data = imageData.data
+        let blankArr = []
+
+        for(let i = 0; i< data.length; i+=4) {
+            let r = data[i],
+                g = data[i+1],
+                b = data[i+2]
+            if(r === 0 && g === 0 && b === 0) {
+                // 保存黑色点位置
+                blankArr.push(i+3)
+            }
+        }
+        console.log(imageData)
+        ctx.drawImage(img, 0, 0, 200, 200)
+        imageData = ctx.getImageData(0, 0, 200, 200)
+        console.log(data)
+
+        blankArr.forEach(i => {
+            imageData.data[i] = 0
+        })
+
+        ctx.putImageData(imageData, 0, 0)
+
+        let url = canvas.toDataURL('image/png', 1)
+        console.log(url)
+
+
+
+
+        
+    }
+    global.create = create
+    
+
+
+})(window)
+</script>
