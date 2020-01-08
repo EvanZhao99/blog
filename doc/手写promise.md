@@ -1,4 +1,11 @@
-# promise 内部执行过程
+## tem
+- 三个状态： fulfilled、padding、rejected
+- 两个值：value、reason
+- 一个方法：then
+- 默认padding，可以转化为fulfilled和rejected,只能更改一次
+
+
+## promise 内部执行过程
 以ajax请求为例：
  1. 创建promise实例: 传入executor(resolve, reject) 立即执行函数 两个回调
  ```javascript
