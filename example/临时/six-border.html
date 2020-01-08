@@ -8,61 +8,69 @@
 </head>
 <body>
     <button onclick="create()">create</button>
+    <span>模板</span>
     <img crossOrigin="Anonymous" id="model" src="https://public-img.51easymaster.com/image/37f4e6f4f46c09c2e69a.svg" alt="">
+    <span>头像</span>
     <img crossOrigin="Anonymous" id="img" src="http://img2.imgtn.bdimg.com/it/u=3195330135,317485367&fm=15&gp=0.jpg" alt="">
+    <span>预览</span>
+    <img id="preview" src="" alt="">
+    <span>画布</span>
     <canvas id="canvas" style="border: 1px solid red;"></canvas>
 </body>
 </html>
 <script>
 (function(global) {
     function create() {
-        let scole = 5
-        let canvas = document.getElementById('canvas')
-        canvas.width = 200 * scole
-        canvas.height = 200 * scole
-        let ctx = canvas.getContext('2d')
+        let scale = 5 // 放大倍数 解决分辨率问题
         // 模板图片
         let modelImg = document.getElementById('model')
+        // 头像
+        let img = document.getElementById('img')
 
+        let canvas = document.getElementById('canvas')
+        canvas.width = 200 * scale
+        canvas.height = 200 * scale
+        let ctx = canvas.getContext('2d')
+        
         // 填充纯黑色
         ctx.fillStyle = '#000000'
-        ctx.fillRect(0, 0, 200 * scole, 200 * scole)
+        ctx.fillRect(0, 0, 200 * scale, 200 * scale)
 
-        let img = document.getElementById('img')
-        ctx.drawImage(modelImg, 10, 10, 180 * scole, 180 * scole)
+        // 绘制模板
+        ctx.drawImage(modelImg, 10, 10, 180 * scale, 180 * scale)
 
-        let imageData = ctx.getImageData(0, 0, 200 * scole, 200 * scole)
+        // 拿到图片像素点数据，data为一维数组，每四个元素组成一个像素点，形如：[r,g,b,a, r,g,b,a, r,g,b,a]
+        let imageData = ctx.getImageData(0, 0, 200 * scale, 200 * scale)
         let data = imageData.data
+
+        // 存放边缘位置索引
         let blankArr = []
 
+        // 遍历像素点 根据色值找到黑色区域
         for(let i = 0; i< data.length; i+=4) {
             let r = data[i],
                 g = data[i+1],
                 b = data[i+2]
             if(r === 0 && g === 0 && b === 0) {
-                // 保存黑色点位置
+                // 保存黑色点代表透明度的索引
                 blankArr.push(i+3)
             }
         }
-        console.log(imageData)
-        ctx.drawImage(img, 0, 0, 200 * scole, 200 * scole)
-        imageData = ctx.getImageData(0, 0, 200 * scole, 200 * scole)
-        console.log(data)
 
+        ctx.drawImage(img, 0, 0, 200 * scale, 200 * scale)
+        imageData = ctx.getImageData(0, 0, 200 * scale, 200 * scale)
         blankArr.forEach(i => {
+            // 透明度设为0
             imageData.data[i] = 0
         })
 
+        // 根据处理后的数据重写绘制画布
         ctx.putImageData(imageData, 0, 0)
 
-        let url = canvas.toDataURL('image/png', 1)
-        img.src = url
-        console.log(url)
-
-
-
-
-        
+        // 六边形头像 边缘区域透明 base64格式
+        let imgUrl = canvas.toDataURL('image/png', 1)
+        document.getElementById('preview').src = imgUrl
+        console.log(imgUrl)
     }
     global.create = create
     
