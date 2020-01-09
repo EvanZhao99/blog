@@ -140,6 +140,10 @@ function myNew(constructor, ...args) {
   默认结束为止
   若参数为负数，表示到倒数第几个结束，slice(-2, -1)表示倒数第二个到倒数第一个（只包含倒数第二个，不包含倒数第一个）
 
+### 2. String.prototype.slice(begin, end)
+返回一个新的字符串，不改变原来的
+
+
 ## 九、DOM操作优化
 现代浏览器已经针对连续的dom操作做了优化，所以不需要再去优化dom操作
 
