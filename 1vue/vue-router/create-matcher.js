@@ -13,15 +13,16 @@ export default function createMatcher(routes) {
   }
 
   // 根据路径找到对应记录
-  function match(location) {
-    let record = pathMap[location]
+  function match(path) {
+    let record = pathMap[path]
+    let location = {
+      path: path
+    }
     if(record) {
       // 根据记录创建对应的路由
-      return createRouteMap(record, {
-        path: location
-      })
+      return createRoute(record, location)
     } else {
-      return createRouteMap(null, {
+      return createRoute(null, {
         path: location
       })
     }

@@ -13,6 +13,7 @@ export default function createRouterMap(routes, oldPathList, oldPathMap) {
   }
 }
 
+// 改变pathLsit pathMap
 function addRouteRecord(route, pathList, pathMap, parent) {
   // 子路由记录添加前缀
   let path = parent ? `${parent.path}/${router.path}` : route.path
