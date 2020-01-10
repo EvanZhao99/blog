@@ -5,7 +5,6 @@
  * record: {path, component, parent}
  */ 
 
-
 export default class VueRouter{
   constructor(options) {
     // 1 什么叫路由 根据不同的路径跳转不同的组件
