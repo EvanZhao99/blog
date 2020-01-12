@@ -1,4 +1,9 @@
-
+/**
+ * 数据结构描述
+ * pathList: ['/','/about','/about/a','/about/b']
+ * pathMap: {'/': '/的记录','/about': '/about的记录',}
+ * record: {path, component, parent}
+ */ 
 
 export default class VueRouter{
   constructor(options) {

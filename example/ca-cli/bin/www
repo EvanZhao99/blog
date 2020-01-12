@@ -1,0 +1,5 @@
+#! /usr/bin/env node
+
+// 可执行文件
+// 执行源代码
+require('../src/main.js')
