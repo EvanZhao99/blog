@@ -181,12 +181,10 @@ Promise.reject = function(value) {
 }
 module.exports = Promise
 ```
-# 测试
-- 全局安装测试工具 sudo npm instal promises-aplus-tests -g
-- 执行命令：promsies-aplus-tests 文件名
-- 需要暴露给测试工具一个对象用于测试
-```
-// 暴露一个方法 这个方法需要返回一个对象 对象上需要有 promise resolve reject 三个属性
+## 测试
+
+1. 暴露一个方法 这个方法需要返回一个对象 对象上需要有 promise resolve reject 三个属性
+```js
 Promise.defer= Promise.deferred = function() {
     let dfd = {}
     dfd.promise = new Promise((resolve, reject) => {
@@ -195,4 +193,19 @@ Promise.defer= Promise.deferred = function() {
     })
     return 
 }
+```
+2. 全局安装测试工具 sudo npm instal promises-aplus-tests -g
+3. 配置脚本
+```js
+// package.json文件
+{
+  "scripts": {
+    "test": "promises-aplus-tests ./src/promise.js"
+  }
+}
+
+```
+4. 执行脚本
+```js
+npm run test
 ```
