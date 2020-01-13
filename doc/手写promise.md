@@ -209,3 +209,5 @@ Promise.defer= Promise.deferred = function() {
 ```js
 npm run test
 ```
+### 测试结果
+![](https://public-img.51easymaster.com/image/2fddedee84d10c668db4.png)

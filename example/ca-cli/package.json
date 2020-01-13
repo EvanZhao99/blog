@@ -12,6 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "commander": "^4.1.0"
+    "commander": "^4.1.0",
+    "consolidate": "^0.15.1",
+    "download-git-repo": "^3.0.2",
+    "inquirer": "^7.0.3",
+    "metalsmith": "^2.3.0",
+    "ncp": "^2.0.0",
+    "ora": "^4.0.3"
   }
 }

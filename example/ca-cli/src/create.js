@@ -7,7 +7,7 @@ let ncp = require('ncp')
 let downloadGitReop = require('download-git-repo') // 下载git仓库
 const MetalSmith = require('metalsmith') // 遍历文件夹
 // consolidate 统一了所有的模板引擎
-let {rendr} = require('consolidate').ejs
+let {render} = require('consolidate').ejs
 const { downloadDirectory } = require('./constants')
 
 render = promisify(render)
@@ -42,7 +42,7 @@ const waitFnloading = (fn, message) => async (...args) => {
 }
 
 // 拉取用户选择的tag
-const download = async (repo, tag) {
+const download = async (repo, tag) => {
   let api = `zhu-cli/${repo}`
   if(tag) {
     api += `#${tag}`
@@ -90,7 +90,7 @@ module.exports = async (projectName) => {
   } else {
     // 复杂模板
     // 需要用户选择 然后编译模板
-    await new Promise(resolve, reject) => {
+    await new Promise((resolve, reject) => {
       MetalSmith(__dirname) // 默认遍历当前路径下的src
         .source(result)
         .destination(path.resolve(projectName))
@@ -123,11 +123,11 @@ module.exports = async (projectName) => {
         .build((err) => {
           if(err) {
             reject()
-          } esle {
+          } else {
             resolve()
           }
         })
-    }
+    })
   }
 
 }
