@@ -150,7 +150,65 @@ Promise.reject = function(reason){
   })
 }
 
-// Promise.then()
+/**
+ * 思路：遍历promise，在then方法中对结果进行收集、排序
+ */
+Promise.all = function (promises) {
+  return new Promise((resolve, reject) => {
+    // 收集返回值
+    let results = []
+    // 计数器
+    let i = 0
+    let onfulfilled = function (value, index) {
+      results[index] = value
+      // 当成功的个数与传入参数的个数相等时 执行resolve
+      if(++i === promises.length) {
+        resolve(results)
+      }
+    }
+
+    // 遍历promise 
+    for(let i = 0; i < promises.length; i++) {
+      let current = promises[i]
+      if(typeof current === 'object' && current !== null) {
+        if(typeof current.then === 'function') {
+          current.then(res => {
+            onfulfilled(res, i)
+          }, reject)
+        } else {
+          onfulfilled(current, i)
+        }
+      } else {
+        onfulfilled(current, i)
+      }
+    }
+
+  })
+}
+
+/**
+ * 思路：遍历promises,在then方法中调用resolve，谁先成功谁执行
+ */
+Promsise.race = function(promises) {
+  return new Promise((resolve, reject) => {
+    for(let i = 0; i < promises.length; i++) {
+      let current = promises[i]
+      if(typeof current === 'object' && current !== null) {
+        if(typeof current.then === 'function') {
+          current.then(resolve, reject)
+        } else {
+          resolve(current)
+        }
+      } else {
+        resolve(current)
+      }
+    }
+  })
+}
+
+/**
+ * 用于测试 暴露defer/resolve/reject方法
+ */
 Promise.defer= Promise.deferred = function() {
   let dfd = {}
   dfd.promise = new Promise((resolve, reject) => {

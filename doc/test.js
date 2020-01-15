@@ -1,35 +1,53 @@
-function swap(arr, x, y) {
-    let z = arr[x]
-    arr[x] = arr[y]
-    arr[y] = z
-}
-
-function partition(arr, start, end) {
-    let pivot = arr[end-1]
-    let i = start
-    for (let j = start; j < end; j++) {
-        // 将比pivot小的放到前面
-        // 
-        if (arr[j] < pivot) {
-            swap(arr, i++, j)
-        }
+// 数据劫持
+function defineReactive(obj, key, value) {
+  observer(value)
+  Object.defineProperty(obj, key, {
+    get() {
+      return value
+    },
+    set(newValue) {
+      if(typeof newValue === 'object') {
+        observer(newValue)
+      }
+      // 通知watcher 更新视图
+      update()
+      value = newValue
     }
-    swap(arr, i, end-1)
-    // console.log(i)
-    return i
+  })
 }
-
-function quickSort(arr, start=0, end=arr.length) {
-    if (end - start <= 1) {
-        return
+// 深度监听
+function observer(obj) {
+  if(Array.isArray(obj)) {
+    // 数组单独处理
+    return observerArray(obj)
+  }
+  if(typeof obj !== 'object') {
+    return 
+  }
+  for(let key in obj) {
+    defineReactive(obj, key, obj[key])
+  }
+}
+// 监听数组
+function observerArray(arr) {
+  // 创建一个原型对象 其原型指向数组原型
+  let proto = Object.create(Array.prototype)
+  let methods = ['push', 'pop', 'shift', 'unshift', 'reverse', 'sort', 'splice']
+  methods.forEach(method => {
+    proto[method] = function() {
+      update()
+      Array.prototype[method].call(this, ...arguments)
     }
-    let p = partition(arr, start, end)
-    // 左开右闭
-    quickSort(arr, start, p)
-    quickSort(arr, p+1, end)
+  })
+  arr.__proto__ = proto
+}
+function update() {
+  // 更新视图
+  setTimeout(() => console.log('更新视图'), 0)
 }
 
-let arr = [1,5,8,3,2,9,7]
-quickSort(arr)
-// partition(arr, 0,  arr.length)
-console.log(arr)
+// 测试用例
+let obj = [1, 2, 3]
+observer(obj)
+obj.push(4)
+console.log(obj)
