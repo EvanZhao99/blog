@@ -285,3 +285,45 @@ xhr.upload.onloadend = function() {}
 ### 2 XSS
 网站中注入恶意代码。通常是输入框中包含js代码
 
+
+## 十七、 arguments
+`arguments`是一个`类数组对象`，除了`length`之外，没有其他数组的属性和方法
+- 转换成数组
+```js
+let args = Array.from(arguments)
+// or
+let args = [...arguments]
+```
+- 非严格模式
+在`非严格模式`下，arguments会跟踪参数的变化，如下：
+```js
+function f(a) {
+  arguments[0] = 99
+  console.log(a) // 99
+}
+f(1)
+
+// or
+function f(a) {
+  a = 99
+  console.log(arguments[0]) // 99
+}
+f(1)
+
+```
+> 但是在严格模式、剩余参数、默认参数、结构参数的情况下，arguments不会跟踪参数
+```js
+function f(a=10) {
+  arguments[0] = 99
+  console.log(a) // 1
+}
+f(1)
+
+// or
+function f(a=10) {
+  a = 99
+  console.log(arguments[0]) // 1
+}
+f(1)
+
+```
