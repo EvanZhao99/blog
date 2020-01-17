@@ -1,12 +1,11 @@
 # 实现一个简单的Vue
-包含两个功能：
-- 创建虚拟dom，转换成真实dom
-- 模拟domDiff算法，更新节点
+包含三个功能：
+- 实现`h`函数，创建虚拟DOM
+- 实现`mount`函数，将虚拟DOM转化为真实DOM，并挂载到指定容器
+- 实现`patch`函数，更新DOM，模拟domDiff算法，组件复用，更新子节
   
 涉及概念：
-- domDiff原则： 尽量少操作DOM，并且针对常用dom操作进行优化
-- h函数：`h`是用来创建虚拟DOM的，虚拟DOM就是一个普通的JS对象，存放着属性、类型、children，作用是描述真实DOM，存放真实DOM信息
-- mount函数：根据虚拟dom生成真实dom,并挂载到容器上
+- 虚拟DOM：就是一个普通的JS对象，存放着属性、类型、children，作用是描述真实DOM，存放真实DOM信息
 
 ## 一、一个简单的例子
 用Vue动态创建一个列表，并插入到文档中，只需要三步：
@@ -86,6 +85,8 @@ export default function vnode(type, key, props={}, children=[], text, domElement
 ```
 
 ### 2. mount函数的实现
+`mount`函数包含两个步骤：
+1. 
 ```js
 /**
  *将虚拟节点转换为真实节点 挂载到容器上
