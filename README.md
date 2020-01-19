@@ -17,4 +17,8 @@
 3. [前端入门MongoDB(Mac版)](https://github.com/pluckychuang/blog/blob/master/doc/%E6%95%B0%E6%8D%AE%E5%BA%93.md)
 4. [前端入门MongoDB（二）](https://github.com/pluckychuang/blog/blob/master/doc/%E5%89%8D%E7%AB%AF%E5%85%A5%E9%97%A8MongoDB%EF%BC%88%E4%BA%8C%EF%BC%89.md)
 5. [Promise入门](https://github.com/pluckychuang/blog/blob/master/doc/Promise%E5%85%A5%E9%97%A8.md)
+6. [数据结构和算法笔记](https://github.com/pluckychuang/blog/blob/master/doc/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95.md)
+7. [设计模式笔记](https://github.com/pluckychuang/blog/blob/master/doc/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.md)
+8. [js笔记](https://github.com/pluckychuang/blog/blob/master/doc/js%E6%B1%87%E6%80%BB.md)
+9. [es6-7-8-9汇总](https://github.com/pluckychuang/blog/blob/master/doc/es6-7-8-9%E6%B1%87%E6%80%BB.md)
 
