@@ -301,8 +301,8 @@ function updateChildren(parentDomElement, oldChildren, newChildren) {
 }
 ```
 ## 源代码
-[源码地址]()
-文章写的比较杂乱，可以把源码down下拉，对着源码看可能会好一些
+[源码地址](https://github.com/pluckychuang/blog/tree/master/1vue/vue-domDiif)
+文章写的比较杂乱，可以把源码down下来，对着源码看可能会好一些
 
 运行代码：
 - npm install

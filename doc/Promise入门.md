@@ -8,7 +8,7 @@ Promise本意是承诺，在程序中的意思就是承诺我过一段时间会�
 > then 方法就是用来指定Promise对象等状态改变时确定执行等操作，resolve时执行第一个函数（onFulfilled),reject时执行第二个函数（onRejected
 ### 构造一个Promise
 ##### 1 使用Promise
-```
+```js
 let promise = new Promise((resolve, reject) => {
     setTimeout(() => {
         if(Math.random()>0.5)
@@ -24,7 +24,7 @@ promise.then(Fulfilled,Rejected)
 第一个形参运行后会让Promise实例处于resolve状态，所以我们一般给第一个形参命名为resolve,使 Promise 对象的状态改变成成功，同时传递一个参数用于后续成功后的操作
 第一个形参运行后会让Promise实例处于reject状态，所以我们一般给第一个形参命名为reject,将 Promise 对象的状态改变为失败，同时将错误的信息传递到后续错误处理的操作
 ##### 2 es5模拟Promise 
-```
+```js
 function Promise(fn) {
     fn((data)=> {
         this.success(data);
@@ -47,7 +47,7 @@ Promise.prototype.then = function (success, error) {
 }
 ```
 ##### 3 es6模拟Promise
-```
+```js
 class Promise {
     constructor(fn) {
         fn((data)=> {
@@ -73,7 +73,7 @@ class Promise {
 }
 ``` 
 ### promise 做为函数的返回值
-```
+```js
 function ajaxPromise (queryUrl) {
   return new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
@@ -103,7 +103,7 @@ ajaxPromise('http://www.baidu.com')
 每次调用返回的都是一个新的Promise实例
 链式调用的参数通过返回值传递
 then可以使用链式调用的写法原因在于，每一次执行该方法时总是会返回一个Promise对象
-```
+```js
 readFile('1.txt').then(function (data) {
     console.log(data);
     return data;

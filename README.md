@@ -1,9 +1,20 @@
 # blog
 
-## 1 [webpack入门](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md)
+平时学习时的一些demo与笔记，没有放出链接的大部分都是不完整的草稿，不建议翻，浪费时间
 
-## 2[前端入门MongoDB(Mac版)](https://github.com/pluckychuang/blog/blob/master/doc/%E6%95%B0%E6%8D%AE%E5%BA%93.md)
+## 文章
+1. [实现一个简单的Vue](https://github.com/pluckychuang/blog/blob/master/doc/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84Vue.md)
+2. [实现一个符合Promise/A+规范的Promise库](https://github.com/pluckychuang/ca-promise)
+3. [实现一个Vue-router](https://github.com/pluckychuang/ca-promise)
+4. [实现一个Vuex](https://github.com/pluckychuang/ca-promise)
+5. [实现一个简单的webpack](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md)
+6. [实现一个简单的脚手架工具](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md)
+   
 
-## 3[前端入门MongoDB（二）](https://github.com/pluckychuang/blog/blob/master/doc/%E5%89%8D%E7%AB%AF%E5%85%A5%E9%97%A8MongoDB%EF%BC%88%E4%BA%8C%EF%BC%89.md)
-## 4 [深入理解promise原理](https://github.com/pluckychuang/blog/blob/master/doc/%E6%89%8B%E5%86%99promise.md)
-## 
+## 笔记
+1. [webpack入门](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md)
+2. [webpack优化](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md)
+3. [前端入门MongoDB(Mac版)](https://github.com/pluckychuang/blog/blob/master/doc/%E6%95%B0%E6%8D%AE%E5%BA%93.md)
+4. [前端入门MongoDB（二）](https://github.com/pluckychuang/blog/blob/master/doc/%E5%89%8D%E7%AB%AF%E5%85%A5%E9%97%A8MongoDB%EF%BC%88%E4%BA%8C%EF%BC%89.md)
+5. [深入理解promise原理](https://github.com/pluckychuang/blog/blob/master/doc/%E6%89%8B%E5%86%99promise.md)
+
