@@ -117,7 +117,7 @@ readFile('1.txt').then(function (data) {
 });
 ``` 
 ### promise API
-- Promise.all
-同时执行多个异步，均完成是状态变为resolve
-- Promise.race
-同时执行多个异步，当有一个完成时状态变为resolve
+- Promise.all: 同时执行多个异步，均完成是状态变为resolve
+- Promise.race: 同时执行多个异步，当有一个完成时状态变为resolve
+- Promise.allSettled: 和all方法类似，但是不会短路，会将所有成功和失败的promise全部返回
+- 

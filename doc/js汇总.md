@@ -30,24 +30,26 @@ prototype本身就是一个普通的js对象
 ### 2.实现原理
 ```js
 Object.create = function(prototype, properties) {
-  if(!prototype || typeof prototype !== 'object') { 
+  if(typeof prototype !== 'object') { 
     throw new Error('prototype must be a object')
   }
   function Constructor() {}
   Constructor.prototype = prototype
   let obj = new Constructor()
-  o.constructor = Constructor
   if( properties !== undefined) {
     if(!properties || typeof properties !== 'object') {
-      throw new Error('properties must be o object')
+      throw new Error('properties must be an object')
     }
     Object.defineProperties(obj, properties)
   }
   return obj
 }
 ```
+### 3.Object.create(null)和{}的区别？
+Object.create(null)返回一个高度纯净的对象，没有原型链，可以自定义`toString、hasOwnProperty`等方法，不用担心覆盖原型链
 
-## 三 hasOwnProperty ??
+## 三 hasOwnProperty 
+判断是自身属性还是继承属性
 
 ## 四. Object.defineProperty
 ### 1. 参数
@@ -77,7 +79,7 @@ configurable特性表示对象的属性是否可以被删除，以及除writable
 - disconnect   取消监听
 - takeRecords  获取变更队列中所有已检测到但尚未处理的记录
 
-```
+```js
 var targetNode = document.querySelector("#someElement");
 var observerOptions = {
   childList: true,
@@ -87,9 +89,6 @@ var observerOptions = {
 var observer = new MutationObserver(callback);
 observer.observe(targetNode, observerOptions);
 
-/* ...later, when it's time to stop observing... */
-
-/* handle any still-pending mutations */
 
 var mutations = observer.takeRecords();
 
@@ -284,7 +283,6 @@ xhr.upload.onloadend = function() {}
 
 ### 2 XSS
 网站中注入恶意代码。通常是输入框中包含js代码
-
 
 ## 十七、 arguments
 `arguments`是一个`类数组对象`，除了`length`之外，没有其他数组的属性和方法
