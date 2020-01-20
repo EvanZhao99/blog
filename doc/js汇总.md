@@ -1,5 +1,114 @@
-# js汇总
-## 一 深入理解原型
+# js笔记汇总
+
+## 未归类
+1. 高阶函数  
+参数或者返回值是函数  
+   
+```js
+  // 使用高阶函数 批量创建类型判断函数
+function isType(type) {
+  return function(obj) {
+    return Object.prototype.toString.call(obj).includes(type)
+  }
+}
+
+let types = ['String', 'Object','Array','Null','Undefined','Boolean']
+let fns = {}
+// 批量创建 函数柯里化
+types.forEach(type => {
+  fns['is' + type] = isType(type)
+})
+
+// 测试实例
+let obj = true
+console.log(fns.isBoolean(obj)) 
+console.log(fns.isObject(obj))
+
+// 结果： true  false
+```
+
+2. 实现`lodash`的`after`方法
+```js
+  function after(number, callback) {
+    return function() {
+      if(--number <= 0) {
+        callback()
+      }
+    }
+  }
+
+  // 测试实例
+  let done = after(3, function() {
+    console.log('已执行三次')
+  })
+
+  done()
+  done()
+  done()
+  // 执行结果： 已执行三次
+ ```
+3. 实现`lodash`的`before`方法
+```js
+// lodash中的before函数， 面向切片编程（AOP）， Vue实现数组响应式原理
+Function.prototype.before = function(fn) {
+  let self = this
+  return function() {
+    fn()
+    self(...arguments)
+  }
+}
+
+// 测试实例
+function update() {
+  console.log('更新视图')
+}
+let done = update.before(function() {
+  console.log('检查state更新列表')
+})
+done()
+
+// 结果： 检查state更新列表   更新视图
+```
+4. 实现深拷贝
+```js
+
+function deepClone(obj, hash=new WeakMap()) {
+  // null & undefined
+  if(obj == null) return obj
+  // 正则
+  if(obj instanceof RegExp) return new RegExp(obj)
+  // 日期
+  if(obj instanceof Date) return new Date(obj)
+  // 对象 & 数组
+  if(hash.has(obj)) return hash.get(obj) // 优化多次引用同一个对象的情况
+  let instance = new obj.constructor
+  for(let key in obj) {
+    if(obj.hasOwnProperty(key)) {
+      instance[key] = deepClone(obj[key], hash)
+    }
+  }
+  return instance
+}
+
+// 测试实例
+let obj = {age: 1}
+let students = [obj]
+let copyStudents = deepClone(students)
+copyStudents[0].age = 2
+console.log(obj.age)
+console.log(students[0].age)
+console.log(copyStudents[0].age)
+
+// 结果： 1 1 2
+
+```
+5. 1
+
+
+
+
+
+## 一、 深入理解原型
 ### 1.概念  
 [ES2019规范](https://www.ecma-international.org/ecma-262/10.0/)对prototype的描述：
   > object that provides shared properties for other objects  

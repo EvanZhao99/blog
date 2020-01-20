@@ -24,7 +24,6 @@ class Compiler {
         config.plugins.forEach(instance => {
             instance.apply(this)
         })
-
     }
     getSource(modulePath) {
         // 同步读取代码文件
