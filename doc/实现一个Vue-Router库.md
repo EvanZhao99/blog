@@ -1,8 +1,9 @@
 # 实现一个Vue-Router库
+[源码地址](https://github.com/pluckychuang/ca-vue-router)
 ## 1. 什么是路由？
 前端有一个非常火的面试题，从输入URL到浏览器显示页面的过程中发生了什么？  
  
-> 闲扯：  从实习面试到现在，被问到的没有十次也差不多了，每次都是硬着头皮背提前准备好的答案，然后面试官不置可否的点点头，聊一下下一个问题。。。  
+> 闲扯：  从实习面试到现在，被问到的没有十次也差不多了，每次都是硬着头皮背提前准备好的答案，然后面试官不置可否的点点头，下一个问题是。。。  
 后来我也当过一段时间时间面试官，但是从来不敢问这道题，怕人家问我标准答案是啥【捂脸】
 
 总结一下这道题应该回答的点有哪些：
@@ -116,40 +117,34 @@ VueRouter.install = install; // 提供的install方法
 好吧!我们先去看下install中做了什么？
 
 ### 2.1 编写install方法
-
+- 给所有组件的生命周期都增加beforeCreate方法
+- _routerRoot: 保证所有组件都可以通过 this._routerRoot._router 拿到用户传递进来的路由实例对象
 ```jsx
 export let _Vue;
 export default function install(Vue) {
     _Vue = Vue;
-    Vue.mixin({ // 给所有组件的生命周期都增加beforeCreate方法
+    Vue.mixin({
         beforeCreate() {
-            if (this.$options.router) { // 如果有router属性说明是根实例
-                this._routerRoot = this; // 将根实例挂载在_routerRoot属性上
-                this._router = this.$options.router; // 将当前router实例挂载在_router上
+            if (this.$options.router) {
+                this._routerRoot = this
+                this._router = this.$options.router
 
-                this._router.init(this); // 初始化路由,这里的this指向的是根实例
-            } else { // 父组件渲染后会渲染子组件
-                this._routerRoot = this.$parent && this.$parent._routerRoot;
-                // 保证所有子组件都拥有_routerRoot 属性，指向根实例
-                // 保证所有组件都可以通过 this._routerRoot._router 拿到用户传递进来的路由实例对象
+                this._router.init(this)
+            } else {
+                this._routerRoot = this.$parent && this.$parent._routerRoot
             }
         }
     })
 }
 ```
 
-这里我们应该在`Vue-Router`上增加一个`init`方法，主要目的就是初始化功能
-
-这里在强调下，什么是路由？ 路由就是**匹配到对应路径显示对应的组件**！
+这里我们应该在`Vue-Router`上增加一个`init`方法，主要目的就是初始化功
 
 ```jsx
 import createMatcher from './create-matcher'
 import install from './install'
 export default class VueRouter{
     constructor(options){
-        // 根据用户传递的routes创建匹配关系,this.matcher需要提供两个方法 
-        // match：match方法用来匹配规则
-        // addRoutes：用来动态添加路由
         this.matcher = createMatcher(options.routes || []);
     }
     init(app){}
@@ -164,17 +159,11 @@ VueRouter.install = install;
 ```js
 import createRouteMap from './create-route-map'
 export default function createMatcher(routes) {
-    // 收集所有的路由路径, 收集路径的对应渲染关系
-    // pathList = ['/','/about','/about/a','/about/b']
-    // pathMap = {'/':'/的记录','/about':'/about记录'...}
     let {pathList,pathMap} = createRouteMap(routes);
-    
-    // 这个方法就是动态加载路由的方法
     function addRoutes(routes){
-        // 将新增的路由追加到pathList和pathMap中
         createRouteMap(routes,pathList,pathMap);
     }   
-    function match(){} // 稍后根据路径找到对应的记录
+    function match(){}
     return {
         addRoutes,
         match
@@ -529,7 +518,7 @@ function runQueue(queue, iterator,cb) { // 迭代queue
             cb();
         }else{
             let hook = queue[index];
-            iterator(hook,()=>{ // 将本次迭代到的hook 传递给iterator函数中,将下次的权限也一并传入
+            iterator(hook,()=>{
                 step(index+1)
             })
         }

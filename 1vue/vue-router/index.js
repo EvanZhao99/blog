@@ -1,3 +1,7 @@
+import install from './install';
+import createMatcher from './create-matcher';
+import HashHistory from './history/hash'
+
 /**
  * 数据结构描述
  * pathList: ['/','/about','/about/a','/about/b']
