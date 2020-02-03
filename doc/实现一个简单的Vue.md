@@ -1,5 +1,6 @@
 # 实现一个简单的Vue
-包含三个功能：
+## 零、简单说明
+本文主要实现三个功能：
 - 实现`h`函数，创建虚拟DOM
 - 实现`mount`函数，将虚拟DOM转化为真实DOM，并挂载到指定容器
 - 实现`patch`函数，更新DOM，模拟domDiff算法，组件复用，更新子节
@@ -17,8 +18,6 @@
 代码如下：
 
 ```js
-// index.js
-import {h, mount} from './vdom'
 
 // 一、获取根节点
 const root = document.getElementById('root')
@@ -43,12 +42,10 @@ mount(vnode, root)
 浏览器渲染效果如下：
 ![](./img/vue-domdiff/ul.png)
 
-
-## 二、实现虚拟DOM的创建
-上述例子一共用到两个方法，`h`函数和`mount`函数
-
-### 1. h函数的实现
-- 拷贝属性
+接下来会介绍上述例子是如何的实现的。
+## 二、实现虚拟DOM的创建（h函数）
+上述例子一共用到两个方法，`h`函数和`mount`函数，首先说一下`h`函数主要做了什么事：
+- 拷贝参数中的config属性
 - 生成vnode
 ```js
 import vnode from './vnode'
@@ -90,7 +87,7 @@ export default function vnode(type, key, props={}, children=[], text, domElement
 
 ```
 
-## 三. 实现虚拟DOM与真实DOM的转换
+## 三. 实现虚拟DOM与真实DOM的转换（mount函数）
 `mount`函数包含两个步骤：  
 
 1. 通过`虚拟`DOM生成`真实`DOM
@@ -107,7 +104,7 @@ export function mount(vnode, container) {
 }
 ```
 
-将创建真实DOM的过程封装成了`createDOMElementFromVnode`方法
+将创建真实DOM的过程封装成了`createDOMElementFromVnode`方法，主要做了三件事：
 - 根据type属性创建一个element
 - 给element属性进行赋值
 - 递归创建children
@@ -132,7 +129,7 @@ function createDOMElementFromVnode(vnode) {
   return vnode.domElement
 }
 ```
-更新DOM属性
+通过`updateProperties`更新DOM属性:
 - 用新属性与旧属性进行比较，删除多余的旧属性
 - 用新属性的值覆盖原来的值，实现`增`和`改`
 - 注：这里修改的对象都是文档上的真实dom,现代浏览器已经对DOM操作做了优化，不需要额外处理
@@ -178,7 +175,8 @@ function updateProperties(vnode, oldProps={}) {
   }
 }
 ```
-## 四、实现带有组件复用功能的视图更新
+## 四、实现带有组件复用功能的视图更新(diff算法)
+![](./img/vue-domdiff/patch.gif)
 - 判断更新的节点与原节点类型是否相同，若相同则复用原来的节点，然后根据差异打补丁；若不相同，直接创建新节点替代原来的节点
 - 如果该节点下存在children，根据`type`和`key`判断该child是否需要复用
 - 考虑到子节点列表可能存在顺序发生变化，所以需要一定的算法去优化，尽可能的实现组件复用提高性能
@@ -300,6 +298,7 @@ function updateChildren(parentDomElement, oldChildren, newChildren) {
   }
 }
 ```
+
 ## 源代码
 [源码地址](https://github.com/pluckychuang/blog/tree/master/1vue/vue-domDiif)
 文章写的比较杂乱，可以把源码down下来，对着源码看可能会好一些

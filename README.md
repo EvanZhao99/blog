@@ -9,6 +9,7 @@
 4. [实现一个Vuex](https://github.com/pluckychuang/ca-promise)
 5. [实现一个简单的webpack](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md)
 6. [实现一个简单的脚手架工具](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md)
+7. [实现一些常见功能](https://github.com/pluckychuang/blog/blob/master/doc/%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0.md)
    
 
 ## 笔记
