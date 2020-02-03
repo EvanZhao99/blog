@@ -84,6 +84,7 @@ es6module 静态的
 
 ## tem
 - Object.entries: 返回键值对的数组
+- proxy: 
 
 
 
