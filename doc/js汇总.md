@@ -1,5 +1,114 @@
-# js汇总
-## 一 深入理解原型
+# js笔记汇总
+
+## 未归类
+1. 高阶函数  
+参数或者返回值是函数  
+   
+```js
+  // 使用高阶函数 批量创建类型判断函数
+function isType(type) {
+  return function(obj) {
+    return Object.prototype.toString.call(obj).includes(type)
+  }
+}
+
+let types = ['String', 'Object','Array','Null','Undefined','Boolean']
+let fns = {}
+// 批量创建 函数柯里化
+types.forEach(type => {
+  fns['is' + type] = isType(type)
+})
+
+// 测试实例
+let obj = true
+console.log(fns.isBoolean(obj)) 
+console.log(fns.isObject(obj))
+
+// 结果： true  false
+```
+
+2. 实现`lodash`的`after`方法
+```js
+  function after(number, callback) {
+    return function() {
+      if(--number <= 0) {
+        callback()
+      }
+    }
+  }
+
+  // 测试实例
+  let done = after(3, function() {
+    console.log('已执行三次')
+  })
+
+  done()
+  done()
+  done()
+  // 执行结果： 已执行三次
+ ```
+3. 实现`lodash`的`before`方法
+```js
+// lodash中的before函数， 面向切片编程（AOP）， Vue实现数组响应式原理
+Function.prototype.before = function(fn) {
+  let self = this
+  return function() {
+    fn()
+    self(...arguments)
+  }
+}
+
+// 测试实例
+function update() {
+  console.log('更新视图')
+}
+let done = update.before(function() {
+  console.log('检查state更新列表')
+})
+done()
+
+// 结果： 检查state更新列表   更新视图
+```
+4. 实现深拷贝
+```js
+
+function deepClone(obj, hash=new WeakMap()) {
+  // null & undefined
+  if(obj == null) return obj
+  // 正则
+  if(obj instanceof RegExp) return new RegExp(obj)
+  // 日期
+  if(obj instanceof Date) return new Date(obj)
+  // 对象 & 数组
+  if(hash.has(obj)) return hash.get(obj) // 优化多次引用同一个对象的情况
+  let instance = new obj.constructor
+  for(let key in obj) {
+    if(obj.hasOwnProperty(key)) {
+      instance[key] = deepClone(obj[key], hash)
+    }
+  }
+  return instance
+}
+
+// 测试实例
+let obj = {age: 1}
+let students = [obj]
+let copyStudents = deepClone(students)
+copyStudents[0].age = 2
+console.log(obj.age)
+console.log(students[0].age)
+console.log(copyStudents[0].age)
+
+// 结果： 1 1 2
+
+```
+5. 1
+
+
+
+
+
+## 一、 深入理解原型
 ### 1.概念  
 [ES2019规范](https://www.ecma-international.org/ecma-262/10.0/)对prototype的描述：
   > object that provides shared properties for other objects  
@@ -30,24 +139,26 @@ prototype本身就是一个普通的js对象
 ### 2.实现原理
 ```js
 Object.create = function(prototype, properties) {
-  if(!prototype || typeof prototype !== 'object') { 
+  if(typeof prototype !== 'object') { 
     throw new Error('prototype must be a object')
   }
   function Constructor() {}
   Constructor.prototype = prototype
   let obj = new Constructor()
-  o.constructor = Constructor
   if( properties !== undefined) {
     if(!properties || typeof properties !== 'object') {
-      throw new Error('properties must be o object')
+      throw new Error('properties must be an object')
     }
     Object.defineProperties(obj, properties)
   }
   return obj
 }
 ```
+### 3.Object.create(null)和{}的区别？
+Object.create(null)返回一个高度纯净的对象，没有原型链，可以自定义`toString、hasOwnProperty`等方法，不用担心覆盖原型链
 
-## 三 hasOwnProperty ??
+## 三 hasOwnProperty 
+判断是自身属性还是继承属性
 
 ## 四. Object.defineProperty
 ### 1. 参数
@@ -77,7 +188,7 @@ configurable特性表示对象的属性是否可以被删除，以及除writable
 - disconnect   取消监听
 - takeRecords  获取变更队列中所有已检测到但尚未处理的记录
 
-```
+```js
 var targetNode = document.querySelector("#someElement");
 var observerOptions = {
   childList: true,
@@ -87,9 +198,6 @@ var observerOptions = {
 var observer = new MutationObserver(callback);
 observer.observe(targetNode, observerOptions);
 
-/* ...later, when it's time to stop observing... */
-
-/* handle any still-pending mutations */
 
 var mutations = observer.takeRecords();
 
@@ -285,3 +393,44 @@ xhr.upload.onloadend = function() {}
 ### 2 XSS
 网站中注入恶意代码。通常是输入框中包含js代码
 
+## 十七、 arguments
+`arguments`是一个`类数组对象`，除了`length`之外，没有其他数组的属性和方法
+- 转换成数组
+```js
+let args = Array.from(arguments)
+// or
+let args = [...arguments]
+```
+- 非严格模式
+在`非严格模式`下，arguments会跟踪参数的变化，如下：
+```js
+function f(a) {
+  arguments[0] = 99
+  console.log(a) // 99
+}
+f(1)
+
+// or
+function f(a) {
+  a = 99
+  console.log(arguments[0]) // 99
+}
+f(1)
+
+```
+> 但是在严格模式、剩余参数、默认参数、结构参数的情况下，arguments不会跟踪参数
+```js
+function f(a=10) {
+  arguments[0] = 99
+  console.log(a) // 1
+}
+f(1)
+
+// or
+function f(a=10) {
+  a = 99
+  console.log(arguments[0]) // 1
+}
+f(1)
+
+```

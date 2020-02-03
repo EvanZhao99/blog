@@ -1,53 +1,31 @@
-// 数据劫持
-function defineReactive(obj, key, value) {
-  observer(value)
-  Object.defineProperty(obj, key, {
-    get() {
-      return value
-    },
-    set(newValue) {
-      if(typeof newValue === 'object') {
-        observer(newValue)
-      }
-      // 通知watcher 更新视图
-      update()
-      value = newValue
-    }
-  })
-}
-// 深度监听
-function observer(obj) {
-  if(Array.isArray(obj)) {
-    // 数组单独处理
-    return observerArray(obj)
+let obj = []
+let handler = {
+  /**
+   * 
+   * @param {*} target 
+   * @param {*} name 
+   * @param {*} value 
+   */
+  set: function(target, name, value) {
+    update()
+    return Reflect.set(target, name, value)
+  },
+  get: function(target, name) {
+    collect()
+    return Reflect.get(target, name)
   }
-  if(typeof obj !== 'object') {
-    return 
-  }
-  for(let key in obj) {
-    defineReactive(obj, key, obj[key])
-  }
-}
-// 监听数组
-function observerArray(arr) {
-  // 创建一个原型对象 其原型指向数组原型
-  let proto = Object.create(Array.prototype)
-  let methods = ['push', 'pop', 'shift', 'unshift', 'reverse', 'sort', 'splice']
-  methods.forEach(method => {
-    proto[method] = function() {
-      update()
-      Array.prototype[method].call(this, ...arguments)
-    }
-  })
-  arr.__proto__ = proto
 }
 function update() {
-  // 更新视图
-  setTimeout(() => console.log('更新视图'), 0)
+  console.log('更新视图')
+}
+function collect() {
+  console.log('依赖收集')
 }
 
-// 测试用例
-let obj = [1, 2, 3]
-observer(obj)
-obj.push(4)
-console.log(obj)
+// 测试实例
+let p = new Proxy(obj, handler)
+
+console.log(p)
+p.push(1)
+console.log(p)
+// 结果： 依赖收集 undefined 更新视图 依赖收集 1

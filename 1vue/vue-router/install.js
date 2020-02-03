@@ -1,6 +1,6 @@
 
 
-
+import RouterView from './components/view'
 export let _Vue
 export default function install(Vue) { // Vue 构造函数
   _Vue = Vue
