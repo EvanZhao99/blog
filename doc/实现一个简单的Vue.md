@@ -40,7 +40,7 @@ const vnode = h(
 mount(vnode, root)
 ```
 浏览器渲染效果如下：
-![](./img/vue-domdiff/ul.png)
+![](https://raw.githubusercontent.com/pluckychuang/blog/master/doc/img/vue-domdiff/ul.png)
 
 接下来会介绍上述例子是如何的实现的。
 ## 二、实现虚拟DOM的创建（h函数）
