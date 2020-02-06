@@ -68,6 +68,9 @@ const installModule = (store, rootState, path, module) => {
   let getters = module._rawModule.getters
   if(getters) {
     forEach(getters, (getterName, fn) => {
+      if(store.getters[getterName]) {
+        throw new Error(`'${getterName}'getter已存在`)
+      }
       Object.defineProperty(store.getters, getterName, {
         get() {
           return fn(module.state) // getter的回调传入state

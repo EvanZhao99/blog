@@ -1,5 +1,12 @@
 # 实现一个Vuex库
-
+## 零、写在前面
+本示例实现了Vuex的部分功能：
+1. 响应式
+2. 模块注册
+3. mutation
+4. state
+5. action
+6. getter
 ## 一、什么是Vuex？
 Vuex是一个状态管理工具，采用集中式存储管理Vue所有组件的状态
 
@@ -32,8 +39,14 @@ let store = new Vuex.Store({
   },
   modules: {
     module1: {
+      state: {
+        s1: 1
+      },
       mutations: {
-        add1() {},
+        add1(state) {
+          console.log(state)
+          state.module1.s1 += 1
+        },
         add2() {}
       }
     }
@@ -182,7 +195,11 @@ class Store{
 }
 ```
 ### 5. 挂在模块
-
+内部执行过程：
+1. 注册state到父模块的state上
+2. 注册mutation到全局上（重名合并）
+3. 注册getters到全局上（重名报错）
+4. 注册action到全局上（重名合并）
 ```js
 /**
  * 挂载模块
@@ -206,6 +223,9 @@ const installModule = (store, rootState, path, module) => {
   let getters = module._rawModule.getters
   if(getters) {
     forEach(getters, (getterName, fn) => {
+      if(store.getters[getterName]) {
+        throw new Error(`'${getterName}'getter已存在`)
+      }
       Object.defineProperty(store.getters, getterName, {
         get() {
           return fn(module.state) // getter的回调传入state
