@@ -176,7 +176,24 @@ function updateProperties(vnode, oldProps={}) {
 }
 ```
 ## 四、实现带有组件复用功能的视图更新(diff算法)
+通过`patch`函数更新节点
+```js
+const newVNode = h(
+  'ul', // type
+  // 特性
+  {
+    id: 'container',
+    style: { width: '200px' }
+  },
+  // 子节点
+  h('li', { style: { color: 'black' } }, 'D'),
+  h('li', { style: { color: 'blue' } }, 'E'),
+  h('li', { style: { color: 'green' } }, 'F'),
+)
+patch(vnode, newVNode)
+```
 ![](https://raw.githubusercontent.com/pluckychuang/blog/master/doc/img/vue-domdiff/patch.gif)
+更新视图时内部执行过程：
 - 判断更新的节点与原节点类型是否相同，若相同则复用原来的节点，然后根据差异打补丁；若不相同，直接创建新节点替代原来的节点
 - 如果该节点下存在children，根据`type`和`key`判断该child是否需要复用
 - 考虑到子节点列表可能存在顺序发生变化，所以需要一定的算法去优化，尽可能的实现组件复用提高性能

@@ -8,19 +8,25 @@ class ModuleCollection{
   constructor(options) {
     this.register([], options)
   }
-  // 注册模块
+  /**
+   * 注册模块
+   * @param {*} path 模块路径 [parentName, childName,...]
+   * @param {*} module 模块
+   */
   register(path, module) {
     let obj = {
       _rawModule: module,
       _children: {},
-      state: module.statef
+      state: module.state
     }
     if(path.length === 0) {
       this.root = obj
     } else {
+      // 根据路径拿到parent
       let parent = path.slice(0, -2).reduce((parent, currentPath) => {
         return parent[currentPath]
       }, this.root)
+      // 将该模块挂在parent上
       parent._children[path[path.length-1]] = obj
     }
     // 看当前模块是否有modules
@@ -103,7 +109,7 @@ const installModule = (store, rootState, path, module) => {
 
 class Store{
   constructor(options = {}) {
-    // 通过Vue实现响应式
+    // 通过创建Vue实例实现响应式
     this.s = new Vue({
       data() {
         return {state: options.state}

@@ -284,7 +284,7 @@ Vue.js是构建客户端应用程序的框架。可以在浏览器中将一个Vu
 - deepClone 源码？？？
 - 
 # 打包 发布npm
-1. 修改版本后
+1. 修改版本号
 2. private: false
 3. script.dist: vue-cli-service build --target lib --name myLib [entry]
 4. npm run dist
@@ -338,7 +338,7 @@ function observer() {
 
 }
 function defineActive() {
-    jichuang
+    
 }
 ```
 

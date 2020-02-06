@@ -1,32 +1,27 @@
 "use strict";
 
+var _dec, _dec2, _class, _dec3, _dec4, _class2;
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+var Parent = (_dec = isParent(true), _dec2 = isChildren(false), _dec(_class = _dec2(_class = function Parent() {
+  _classCallCheck(this, Parent);
+}) || _class) || _class);
+var Sub = (_dec3 = isParent(false), _dec4 = isChildren(true), _dec3(_class2 = _dec4(_class2 = function Sub() {
+  _classCallCheck(this, Sub);
+}) || _class2) || _class2);
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function isParent(value) {
+  return function (constructor) {
+    constructor.isParent = value;
+  };
+}
 
-var Animal =
-/*#__PURE__*/
-function () {
-  function Animal(name) {
-    _classCallCheck(this, Animal);
+function isChildren(value) {
+  return function (constructor) {
+    constructor.isChildren = value;
+  };
+}
 
-    this.name = name;
-    this.age = 1;
-  }
-
-  _createClass(Animal, [{
-    key: "say",
-    value: function say() {
-      return this.name;
-    }
-  }], [{
-    key: "getType",
-    value: function getType() {
-      return 'animal';
-    }
-  }]);
-
-  return Animal;
-}();
+console.log(Parent.isParent);
+console.log(Sub.isParent);
