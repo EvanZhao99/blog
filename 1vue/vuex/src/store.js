@@ -25,8 +25,14 @@ export default new Vuex.Store({
   },
   modules: {
     module1: {
+      state: {
+        s1: 1
+      },
       mutations: {
-        add1() {},
+        add1(state) {
+          console.log(state)
+          state.module1.s1 += 1
+        },
         add2() {}
       }
     }

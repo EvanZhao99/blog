@@ -30,8 +30,7 @@
       "plugin:vue/essential"
     ],
     "rules": {},
-    "parserOptions": {
-    }
+    "parserOptions": {}
   },
   "postcss": {
     "plugins": {

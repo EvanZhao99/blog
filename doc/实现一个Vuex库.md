@@ -85,37 +85,38 @@ const install = (_Vue) => {
 - 定义`subscribe/commit/dispatch`等方法
 ```js
 class Store{
-    constructor(options = {}) {
-        // 通过创建Vue实例实现响应式
-        this.s = new Vue({
-            data() {
-                return {state: options.state}
-            }
-        })
-        this.getters = {}
-        this._mutations = {}
-        this.actions = {}
-        this._subscribers = []
-        // 将数据格式化成一个想要的树结构
-        this._modules = new ModuleCollection(options)
-        // 处理getters mutations actions 挂在children
-        installModule(this, this.s.state, [], this._modules.root)
-        // plugin
-        let plugins = options.plugins || []
-        plugins.forEach(plugin => plugin(this))
-    }
-    subscribe(fn) {
-        this._subscribers.push(fn)
-    }
-    commit(mutationName, payload) {
-        this.mutations[mutationName](payload)
-    }
-    dispatch(actionName, payload) {
-        this.actions[actionName](payload)
-    }
-    get state() {
-        return this.s.state
-    }
+  constructor(options = {}) {
+    // 通过创建Vue实例实现响应式
+    this.s = new Vue({
+      data() {
+        return {state: options.state}
+      }
+    })
+    this.getters = {}
+    this._mutations = {}
+    this.actions = {}
+    this._subscribers = []
+    // 将数据格式化成一个想要的树结构
+    this._modules = new ModuleCollection(options)
+    // 处理getters mutations actions 挂在children
+    installModule(this, this.s.state, [], this._modules.root)
+    // plugin
+    let plugins = options.plugins || []
+    plugins.forEach(plugin => plugin(this))
+
+  }
+  subscribe(fn) {
+    this._subscribers.push(fn)
+  }
+  commit(mutationName, payload) {
+    this._mutations[mutationName].forEach(fn => fn(payload))
+  }
+  dispatch(actionName, payload) {
+    this.actions[actionName].forEach(fn => fn(payload))
+  }
+  get state() {
+    return this.s.state
+  }
 }
 ```
 ### 3. ModuleCollection类
@@ -157,8 +158,30 @@ class ModuleCollection{
   }
 }
 ```
-
-### 4. 挂在模块
+### 4. 实现mutation
+模块内部的 action、mutation 和 getter 是注册在全局命名空间的  
+因此，mutations对应的值是数组，所有模块中名称相同的mutation放到同一个数组中，避免被重写。类似addEventListener
+```js
+let mutations = module._rawModule.mutations
+if(mutations) {
+forEach(mutations, (mutationName, fn) => {
+    let arr = store._mutations[mutationName] || (store._mutations[mutationName] = [])
+    arr.push(payload => {
+    fn(rootState, payload)
+    // 发布  让所有的订阅依次执行
+    store._subscribers.forEach(fn => fn({type: mutationName, payload: payload}, rootState))
+    })
+})
+```
+通过`commit`方法提交`mutation`
+```js
+class Store{
+    commit(mutationName, payload) {
+        this._mutations[mutationName].forEach(fn => fn(payload))
+    }
+}
+```
+### 5. 挂在模块
 
 ```js
 /**
@@ -219,6 +242,11 @@ const installModule = (store, rootState, path, module) => {
   forEach(module._children, (moduleName, module) => {
     installModule(store, rootState, path.concat(moduleName), module)
   })
-
 }
 ```
+## 五、Demo源代码
+[源码地址](https://github.com/pluckychuang/blog/tree/master/1vue/vuex)  
+本地演示步骤：
+1. download该目录下的代码
+2. npm i
+3. npm run serve

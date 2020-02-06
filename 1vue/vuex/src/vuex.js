@@ -58,7 +58,7 @@ const installModule = (store, rootState, path, module) => {
   // 儿子（根模块的state不需要此处处理，Store类的属性访问器实现）
   if(path.length > 0) {
     // 去掉最后一个 就是父亲的路径，拿到父亲的状态，将模块的状态放到上面
-    let parentState = path.slice(0, -2).reduce((parentState, currentPath) => {
+    let parentState = path.slice(0, -1).reduce((parentState, currentPath) => {
       return parentState[currentPath]
     }, rootState)
     // 响应式的将当前模块的state放置到父级模块的state上。（会覆盖父级state中与子模块名相同的属性）
@@ -75,13 +75,15 @@ const installModule = (store, rootState, path, module) => {
       })
     })
   }
+
   // 处理mutations
   let mutations = module._rawModule.mutations
   if(mutations) {
     forEach(mutations, (mutationName, fn) => {
+      // 模块内部的 action、mutation 和 getter 是注册在全局命名空间的
       // mutation对应的值是数组，所有模块中名称相同的mutation放到同一个数组中，避免被重写。类似addEventListener
-      let mutations = store._mutations[mutationName] || []
-      mutations.push(payload => {
+      let arr = store._mutations[mutationName] || (store._mutations[mutationName] = [])
+      arr.push(payload => {
         fn(rootState, payload)
         // 发布  让所有的订阅依次执行
         store._subscribers.forEach(fn => fn({type: mutationName, payload: payload}, rootState))
@@ -93,7 +95,7 @@ const installModule = (store, rootState, path, module) => {
   let actions = module._rawModule.actions
   if(actions) {
     forEach(actions, (actionName, fn) => {
-      let actions = store.actions[actionName] || []
+      let actions = store.actions[actionName] || (store.actions[actionName]=[])
       actions.push(payload => {
         fn(store, payload)
       })
@@ -101,7 +103,7 @@ const installModule = (store, rootState, path, module) => {
   }
 
   // 挂载儿子 递归
-  forEach(module._children, (moduleName, module) => {debugger
+  forEach(module._children, (moduleName, module) => {
     installModule(store, rootState, path.concat(moduleName), module)
   })
 
@@ -132,10 +134,11 @@ class Store{
     this._subscribers.push(fn)
   }
   commit(mutationName, payload) {
-    this.mutations[mutationName](payload)
+    console.log(this._mutations[mutationName])
+    this._mutations[mutationName].forEach(fn => fn(payload))
   }
   dispatch(actionName, payload) {
-    this.actions[actionName](payload)
+    this.actions[actionName].forEach(fn => fn(payload))
   }
   get state() {
     return this.s.state
