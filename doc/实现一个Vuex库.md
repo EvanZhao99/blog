@@ -68,7 +68,7 @@ new Vue({
 ## 四、实现Vuex
 通过上文我们已经大概了解了`Vuex`的用法及特点，接下来我们将依次实现上述功能
 ### 1. install
-在使用`Vuex`是，我们需要注册该组件  
+在使用`Vuex`是，我们需要注册该插件
 ```js
 Vue.use(Vuex)
 ```
@@ -194,7 +194,7 @@ class Store{
     }
 }
 ```
-### 5. 挂在模块
+### 5. 注册模块（installModule）
 内部执行过程：
 1. 注册state到父模块的state上
 2. 注册mutation到全局上（重名合并）
