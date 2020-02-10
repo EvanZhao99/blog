@@ -16,4 +16,44 @@ app.use(ctx => {
     console.log(ctx.response.body) // hello world
 })
 
+// bodyparser中间件
+let bodyparser = (ctx) => {
+    return async (ctx, next) => {
+        await new Promise((resolve, reject) => {
+            let arr = []
+            // 拿到buffer数据
+            ctx.req.on('data', function(data){
+                arr.push(data)
+            })
+            ctx.req.on('end', function() {
+                // 将buffer转化为字符串 再解析
+                let obj = require('querystring').parse(Buffer.concat(arr).toString())
+                ctx.request.body = obj
+                resolve()
+            })
+        })
+        next()
+        
+    }
+    return 
+}
+
+// betterBody中间件 解析文件上传
+let betterBody = (options) => {
+    return async (ctx, next) => {
+        let uploadDir = options.uploadDir
+        
+    }
+}
+
+app.use(async (ctx, nex) => {
+    if(ctx.path === '/form' && ctx.method === 'POST') {
+        let obj = await bodyparser(ctx)
+        if(obj.username === 'admin') {
+            ctx.body = 'ok'
+        } else {
+            ctx.body = 'no'
+        }
+    }
+})
 app.listen(5000)

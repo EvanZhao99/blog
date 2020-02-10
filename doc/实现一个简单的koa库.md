@@ -25,6 +25,7 @@
 - 在相应之前对请求进行处理
 - 一个函数 返回一个async函数
 - 所有的异步操作 必须执行完再promise
+- 中间执行一系列操作 然后把结果放到ctx.body上，koa最后调用req.end(ctx.body)
 中间件
 - static  
 
