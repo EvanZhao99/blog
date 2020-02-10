@@ -23,9 +23,22 @@ class Application {
         ctx.res = ctx.request.res = res
         return res
     }
+    compose(ctx, middlewares) {
+        async function dispatch(index) {
+            let middle = middlewares[index]
+            middle(ctx, () => dispatch(index++))
+        }
+        dispatch(0)
+    }
     handleRequest() {
         return (req, res) => {
-            this.fn(req, res)
+            let ctx = this.createContext(req, res)
+            // 将所有中间件封装成一个promise 
+            let p = this.compose(ctx, this.middlewares)
+            // 相应结果
+            p.then(() => {
+                res.end(ctx.body)
+            })
         }
     }
     listen() {
