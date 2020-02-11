@@ -20,14 +20,14 @@ class Application extends Emitter {
         // 存储中间件
         this.middlewares.push(fn)
     }
-    createContext(res, req) {
+    createContext(req, res) {
         let ctx = this.ctx
         ctx.request = this.request
         ctx.response = this.response
         // 将原生的请求响应也放到自己封装的request、response上
         ctx.req = ctx.request.req = req
-        ctx.res = ctx.request.res = res
-        return res
+        ctx.res = ctx.response.res = res
+        return ctx
     }
     // 聚合 执行所有中间件
     compose(ctx, middlewares) {
@@ -38,14 +38,14 @@ class Application extends Emitter {
             try{
                 let middle = middlewares[index]
                 // 执行当前中间件 将下一个中间件作为next参数
-                middle(ctx, () => dispatch(index++))
+                middle(ctx, () => dispatch(index+1))
             }
             catch(e) {
                 this.emit('error', e)
             }
             
         }
-        dispatch(0)
+        return dispatch(0)
     }
     handleRequest() {
         return (req, res) => {
@@ -78,7 +78,7 @@ class Application extends Emitter {
     listen() {
         // 可以保证this不错乱
         let server = http.createServer(this.handleRequest())
-        server.lister(...arguments)
+        server.listen(...arguments)
     }
 }
 

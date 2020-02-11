@@ -2,7 +2,7 @@ let url = require('url')
 
 let request = {
     // 获取原生req上的method
-    get mothod() {
+    get method() {
         return this.req.method
     },
     get path() {

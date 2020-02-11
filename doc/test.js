@@ -1,2 +1,9 @@
-setTimeout(() => console.log('timeout'), 0)
-setImmediate(() => console.log('immediate'))
+let Koa = require('koa')
+
+let app = new Koa()
+
+app.use(async (ctx, next) => {
+    ctx.body = 'hello world'
+})
+
+app.listen(5000)
