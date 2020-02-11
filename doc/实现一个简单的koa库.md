@@ -156,3 +156,8 @@ let bodyparser = (ctx) => {
 ```
 ### 四、源码
 [源码地址](https://github.com/pluckychuang/blog/tree/master/3node/koa)
+本地演示：
+1. download该目录下代码
+2. npm i
+3. 执行`server.js`演示中间件
+4. 执行`test.js`演示Koa库
