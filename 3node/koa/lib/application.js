@@ -3,6 +3,7 @@ let context = require('./context')
 let request = require('./request')
 let response = require('./response')
 let Emitter = require('events')
+let Stream = require('stream')
 
 let ctx = Object.create(context)
 
@@ -53,7 +54,24 @@ class Application extends Emitter {
             let p = this.compose(ctx, this.middlewares)
             // 相应结果
             p.then(() => {
-                res.end(ctx.body)
+                let body = ctx.body
+                // 文件流 管道返回
+                if(body instanceof Stream) {
+                    body.pipe(res)
+                } else if(typeof body === 'object') {
+                    // 对象转json 返回
+                    ctx.set('Content-Type', 'application/json')
+                    res.end(JSON.stringify(body))
+                } else if(typeof body === 'string' || Buffer.isBuffer(body)) {
+                    // 字符串 buffer 直接返回
+                    res.end(body)
+                } else {
+                    res.end('NOT Found')
+                }
+            }, (err) => {
+                this.emit('error', err)
+                ctx.statusCode(500)
+                res.end('server internal error')
             })
         }
     }
@@ -63,3 +81,5 @@ class Application extends Emitter {
         server.lister(...arguments)
     }
 }
+
+module.exports = Application

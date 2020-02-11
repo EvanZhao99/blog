@@ -1,8 +1,6 @@
 
 
-let context = {
-
-}
+let context = {}
 
 // 如果去ctx取值，转换成去ctx.request上取值
 function defineGetter(property, key) {
