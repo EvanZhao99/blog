@@ -1,10 +1,13 @@
-# webpack
+# webpack优化
 
 
-## 一、webpack
-### 什么是webpack?
-webpack 是一个现代js应用程序的静态模块打包器(module bundler)。  
-当webpack处理应用程序时，它会递归构建一个依赖关系图（dependency graph）,其中包含应用程序需要的所有模块，然后生成一个或多个bundle
+## 一、webpack简介
+### 1. webpack核心概念
+- entry: 指定webpack开始构建的入口文件(默认是src/index.js)，从该模块开始构建并计算出直接或间接的依赖模块
+- output: 指定webpack构建完成后的输出目录
+- loaders: 模块转换器，用于把模块原内容按照需求转换成新内容，可以加载非js模块。由于webpack只能处理js文件，所以需要一些将非js文件编译成webpack可以处理的模块
+- plugins: 插件，扩展webpack的能力，在webpack 构建流程中的特定时机注入扩展逻辑来改变构建结果或者做你想要的事情
+- chunk：coding split的产物，我们可以对一些代码打包成一个单独的chunk，比如将一些公共模块单独打包，可以实现去重、缓存等，或者按需加载的模块，优化加载时间
 
 ### 2. webpack优化手段
 1. 代码分割：通过`import()`懒加载的依赖会单独打包；多入口打包
@@ -22,7 +25,7 @@ webpack 是一个现代js应用程序的静态模块打包器(module bundler)。
         "build": "webpack --config ./build/webpack.base.js"
     }
     ```
-- webpack 配置文件可以导出一个函数，函数的参数就是你传入的环境变量
+2. webpack 配置文件可以导出一个函数，函数的参数就是你传入的环境变量
     ```js
     // "build": "webpack --config ./build/webpack.base.js --env.production"
 
@@ -30,130 +33,12 @@ webpack 是一个现代js应用程序的静态模块打包器(module bundler)。
         console.log(env) // {production: true}
     }
     ```
-- env和process.env
+3. env和process.env
 两个没关系，env是命令行，webpack传的参数
 
-### 4. npx
+4. npx
 npm5.2新加的功能   
 `npx webpack`,npx会查找指定包中的可执行文件，如果该包不存在会先下载后执行。
-
-
-## 二、loader
-
-### 1, 什么是loader？
-模块转换器，用于把模块原内容按照需求转换成新内容，可以加载非js模块  
-
-1. loader 引入的四种方式：
-1）绝对路径；2）alias别名；3）resolve.module
-
-2. loader类型：pre normal inline post;   
-`{enforce: 'pre'}`
-
-### 2. 配置
-#### 1. resolveLoader
-配置loader的续接规则
-```js
-module.exports = {
-    resolveLoader: {
-        modules: [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, 'loaders')]
-    }
-}
-```
-#### 2. module
-```js
-module: {
-    rules: [
-        {
-            test: //,
-            use: []
-        }
-    ]
-}
-```
-- loader顺序：从下到上，从右到左
-  
-
-### 3. loaders
-#### 1. expose-loader
-1. 内联配置
-2. 必须引入一次
-```js
-import $ from 'expose-loader?$!jquery'
-
-// webpack.config.js
-module.exports = {
-    module: {
-        rules: [
-            {
-                test: require.resolve('jquery),
-                loader: 'expose-loader?$'
-            }
-        ]
-    }
-}
-
-```
-```js
-module: {
-    rules: {
-        // 只要引用一次，就会暴露的全局上，不需要再次引入
-        // 当用户引用了jQuery的时候，会触发此loader
-        test: require.resolve('jquery'),
-        use: {
-            loader: 'expose-loader',
-            options: '$' // 别名
-        }
-    }
-}
-```
-
-## 三、plugin
-
-### 1 什么是plugin？
-在webpack 构建流程中的特定时机注入扩展逻辑来改变构建结果或者做你想要的事情。类似vue钩子函数
-
-### 2. plugins
-
-#### 1. provideplugin  
-任何时候，当`identifier`被当做未赋值的变量时，`module`就会自动加载，并且`identifier`会被`module`导出的内容赋值
-```js
-new webpack.ProvidePlugin({
-    $: 'jquery'
-})
-```
-#### 2. purgecss-webpack-plugin
-    > webpack plugin to remove unused css  
-    > 压缩css代码
-
-#### 3. ignorePlugin
-例如moment语言包非常大,需要忽略无用的资源
-
-#### 4. clean-webpack-plugin
- 清空目录
-
-
-## 四、 bable:
-- presets:预设
-默认设置多个常见plugein,例如‘plugin-transform-class’、'plugin-transform-for-of'
-- plugins: 单独配置特定插件，用来弥补presets。
-- 区别：presets从下到上执行，plugins从上到下执行
-
-- exclude
-- enforce: 'pre'---强制在所有js的loader之前执行
--
-
-
-- babel-loader: webpack的loader，相当于入口文件，会调用`@babel/core`
-- @babel/core:提供js转化的方法， 调用`@babel/preset-env`
-- @babel-preset-env: 提供常用的babel插件
-
-
-## plugin
-- addAssetHtmlCdnWebpackPlugin: 引用cnd中plugin。在HTML生成之后插入链接
-- 
-
-
-
 
 ## 二、代码分离
 三种常用的代码分离的方式：
@@ -206,3 +91,16 @@ new webpack.ProvidePlugin({
         })
     }
     ```
+
+### 2. tapable
+webpack本质上是一种事件流机制，它的工作流程就是将各个插件串联起来，而实现这一切的核心就是`Tapable`，webpack中最核心负责编译的`Compiler`和负责创建bundles的`Compilation`都是Tapable的实例。
+
+
+
+
+
+## 四、 bable:
+
+
+
+
