@@ -1,7 +1,8 @@
 # blog
 
-平时学习时的一些demo与笔记，没有放出链接的大部分都是不完整的草稿，不建议翻，浪费时间
-
+科学理论应该尽可能的简单，但不能过于简单。  
+对于图书的真正考验，在于他给读者的生活和行为带来了怎样的影响。  
+希望误入此处的诸位能从以下文章中有所收获
 ## 文章
 1. [实现一个简单的Vue](https://github.com/pluckychuang/blog/blob/master/doc/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84Vue.md)
 2. [实现一个符合Promise/A+规范的Promise库](https://github.com/pluckychuang/ca-promise)
@@ -10,6 +11,9 @@
 
 5. [实现一个简单的Koa库](https://github.com/pluckychuang/blog/blob/master/doc/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84koa%E5%BA%93.md)
 6. [实现一些常见功能](https://github.com/pluckychuang/blog/blob/master/doc/%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0.md)
+7. [webpack入门](https://github.com/pluckychuang/blog/blob/master/doc/webpack1-%E5%85%A5%E9%97%A8.md)
+8. [webpack优化](https://github.com/pluckychuang/blog/blob/master/doc/webpack2-%E4%BC%98%E5%8C%96.md)
+9. [实现一个简单的webpack](https://github.com/pluckychuang/blog/blob/master/doc/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84webpack.md)
 <!-- 7. [实现一个简单的脚手架工具](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md)
 8. [实现一个简单的webpack](https://github.com/pluckychuang/blog/blob/master/doc/webpack%E5%85%A5%E9%97%A8.md) -->
    
