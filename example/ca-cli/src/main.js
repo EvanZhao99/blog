@@ -1,3 +1,5 @@
+// 要执行的核心文件
+
 // 解析用户参数
 const program = require('commander')
 const path = require('path')
