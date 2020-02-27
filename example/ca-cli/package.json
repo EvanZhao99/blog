@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "commander": "^4.1.0",
+    "axios": "^0.19.2",
+    "commander": "^4.1.1",
     "consolidate": "^0.15.1",
     "download-git-repo": "^3.0.2",
     "inquirer": "^7.0.3",

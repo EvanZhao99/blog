@@ -1,28 +1,41 @@
-class Queue{
-    constructor() {
-        this.tasks= []
-    }
-    add(time,data) {
-        setTimeout(() => {
-            this.publish({time, data})
-        }, new Date(time).getTime() - Date.now())
-    }
-    publish(task) {
-        this.tasks.push(task)
-    }
-    listen() {
-        setInterval(() => {
-            let index = this.tasks.length -1
-            while(index >= 0) {
-                let task = this.tasks[index--]
-                console.log(task.data, Date.now() - task.time)
-            }
-            this.tasks.length = 0
-        }, 1000)
-    }
-}
+// const obj = {
+//     say() {
+//         Array.from(arguments).forEach(item => {
+//             console.log(`${this.str} ${item}`)
+//         })
+//     }
+// }
+// Object.defineProperties(obj, {
+//     'str': {
+//         value: 'hello',
+//         writable: false
+//     }
+// })
+// const objZh = {}
+// Object.defineProperties(objZh, {
+//     'str': {
+//         value: '你好',
+//         writable: false
+//     }
+// })
 
-console.log('start:', Date.now())
-let queue = new Queue()
-queue.add(Date.now() + 2398, 'hello world')
-queue.listen()
+// // 方法一
+// function f() {
+//     obj.say.call(objZh, ...arguments)
+// }
+
+// // 方法二
+// const f1 = (...arg) => {
+//     Object.assign(objZh, obj)
+//     objZh.say(...arg)
+// }
+
+// // 方法三
+// let o = {
+//     get str() {
+//         return objZh.str
+//     },
+//     say: obj.say
+// }
+
+console.log()

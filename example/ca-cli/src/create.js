@@ -2,7 +2,8 @@ const axios = require('axios')
 const ora = require('ora') // 终端样式
 const Inquirer = require('inquirer') // 命令行交互
 const { promisify } = require('util')
-const fs = require('path')
+const path = require('path')
+const fs = require('fs')
 let ncp = require('ncp')
 let downloadGitReop = require('download-git-repo') // 下载git仓库
 const MetalSmith = require('metalsmith') // 遍历文件夹
@@ -12,10 +13,11 @@ const { downloadDirectory } = require('./constants')
 
 render = promisify(render)
 
-downloadGitReop = promisify(downloadGitReop)
+// downloadGitReop = promisify(downloadGitReop)
+// downloadGitReop('http://git.nas.51easymaster.com/api/v1/repos/zhaojichuang/ranking', path.resolve(__dirname, 'aa'))
 
 ncp = promisify(ncp) // 将模板文件拷贝到指定目录
-
+// http://git.nas.51easymaster.com/api/v1/admin/orgs
 // create 功能是创建项目
 // 列出所有项目 让用户选择安装
 // 获取仓库代码
@@ -52,40 +54,50 @@ const download = async (repo, tag) => {
   return dest
 }
 
+/**
+ * 流程：
+ * 1）获取仓库列表
+ * 
+ */
+
 module.exports = async (projectName) => {
-  // 1) 获取项目模板
+  // 1) 获取项目列表，让用户选择模板
   let repos = await waitFnloading(fetchRepoList, 'fetching template......')()
 
   // 拿到项目名称
   repos = repos.map((item) => item.name)
 
-  // 选择模板
+  // 通过Inquirer 提供交互界面，实现让用户选择模板；返回promise
   const { repo } = await Inquirer.prompt({
     name: 'repo',
     type: 'list',
     message: 'please choise a template to create project',
-    choices: repos
+    choices: repos // ['reponame1', "repoName2", ...]
   })
 
-  // 2) 通过选择的项目 拉取对应的仓库
+  // 2) 获取项目下版本号列表，让用户tag版本号
   // 获取版本号
   let tags = await waitFnloading(fetchTagList, 'fetchng tags...')(repo)
   tags = tags.map((item) => item.name)
 
+  // 选择一个版本号
   const { tag } = await Inquirer.prompt({
     name: 'tag',
     type: "list",
-    message: 'please choise tags to create project',
+    message: 'please choise a template to create project',
     choices: tags
   })
 
-  // 3）把模板放到一个临时目录里 存好，以备后期使用
+  // 3）通过download-git-repo拉取对应版本的模板代码，把模板放到一个临时目录里 并返回路径名称
   const result = await waitFnloading(download, 'download template')(repo, tag)
 
   // 4)拷贝模板
-  // 拿到下载的目录 直接拷贝到当前的执行目录下即可 使用ncp
+  // 根据项目名称 在当前目录下创建文件夹 将模板拷贝进去
+  // 使用ncp模块
+
   // 如果没有ask.js文件，直接执行拷贝操作，否则执行复制模板逻辑
   if(!fs.existsSync(path.join(result, 'ask.js'))) {
+
     await ncp(result, path.resolve(projectName))
   } else {
     // 复杂模板
