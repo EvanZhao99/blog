@@ -19,7 +19,8 @@ const mapActions = {
     description: 'config project variable',
     examples: [
       'ca-cli config set <k> <v>',
-      'ca-cli config get <k>'
+      'ca-cli config get <k>',
+      'ca-cli config remove <k>'
     ]
   },
   '*': {

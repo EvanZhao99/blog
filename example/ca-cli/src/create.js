@@ -5,7 +5,7 @@ const { promisify } = require('util')
 const path = require('path')
 const fs = require('fs')
 let ncp = require('ncp')
-let downloadGitReop = require('download-git-repo') // 下载git仓库
+let downloadGitRepo = require('download-git-repo') // 下载git仓库
 const MetalSmith = require('metalsmith') // 遍历文件夹
 // consolidate 统一了所有的模板引擎
 let {render} = require('consolidate').ejs
@@ -13,11 +13,13 @@ const { downloadDirectory } = require('./constants')
 
 render = promisify(render)
 
-// downloadGitReop = promisify(downloadGitReop)
+downloadGitRepo = promisify(downloadGitRepo)
 // downloadGitReop('http://git.nas.51easymaster.com/api/v1/repos/zhaojichuang/ranking', path.resolve(__dirname, 'aa'))
 
 ncp = promisify(ncp) // 将模板文件拷贝到指定目录
-// http://git.nas.51easymaster.com/api/v1/admin/orgs
+
+let templates = {wx: 'pluckychuang/ca-vuex'}
+
 // create 功能是创建项目
 // 列出所有项目 让用户选择安装
 // 获取仓库代码
@@ -29,8 +31,8 @@ const fetchRepoList = async () => {
 }
 
 // 抓取tag列表
-const fetchTagList = async (repo) => {
-  const { data } = await axios.get(`https://api.github.com/repos/zhu-cli/${repo}/tags`)
+const fetchTagList = async (template) => {
+  const { data } = await axios.get(`https://api.github.com/repos/${template}/tags`)
   return data
 }
 
@@ -44,7 +46,7 @@ const waitFnloading = (fn, message) => async (...args) => {
 }
 
 // 拉取用户选择的tag
-const download = async (repo, tag) => {
+const download = async (template, tag) => {
   let api = `zhu-cli/${repo}`
   if(tag) {
     api += `#${tag}`
@@ -61,85 +63,88 @@ const download = async (repo, tag) => {
  */
 
 module.exports = async (projectName) => {
+  // 判断项目是否存在
+  if(fs.existsSync(projectName)) {
+    return console.log('this project is exited')
+  }
+
   // 1) 获取项目列表，让用户选择模板
-  let repos = await waitFnloading(fetchRepoList, 'fetching template......')()
-
-  // 拿到项目名称
-  repos = repos.map((item) => item.name)
-
-  // 通过Inquirer 提供交互界面，实现让用户选择模板；返回promise
-  const { repo } = await Inquirer.prompt({
-    name: 'repo',
+  // let repos = await waitFnloading(fetchRepoList, 'fetching template......')()
+  
+  let {template} = await Inquirer.prompt({
+    name: 'template',
     type: 'list',
     message: 'please choise a template to create project',
-    choices: repos // ['reponame1', "repoName2", ...]
+    choices: Object.keys(templates)
   })
+  template = templates[template]
+  console.log(template)
+  // await waitFnloading(async () => {
+  //   await downloadGitRepo(templates[template], projectName)
+  // }, 'fetching template......')()
+  
+  let tags = await waitFnloading(fetchTagList, 'fetchng tags...')(template)
+  
+  // 如果有tag 选择版本
+  let tag = ''
+  if(tags.length) {
+    tags = tags.map((item) => item.name)
+    const answer = await Inquirer.prompt({
+      name: 'tag',
+      type: "list",
+      message: 'please choise a version of template',
+      choices: tags
+    })
+    tag = answer.tag
+  }
+  
+  await waitFnloading(async () => {
+    let api = template
+    if(tag) {
+      api += `#${tag}`
+    }
+    await downloadGitRepo(api, projectName)
+  }, 'fetching template......')()
+
+  // return
+
+  // 拿到项目名称
+  // repos = repos.map((item) => item.name)
+
+  // 通过Inquirer 提供交互界面，实现让用户选择模板；返回promise
+  // const { repo } = await Inquirer.prompt({
+  //   name: 'repo',
+  //   type: 'list',
+  //   message: 'please choise a template to create project',
+  //   choices: repos // ['reponame1', "repoName2", ...]
+  // })
 
   // 2) 获取项目下版本号列表，让用户tag版本号
   // 获取版本号
-  let tags = await waitFnloading(fetchTagList, 'fetchng tags...')(repo)
-  tags = tags.map((item) => item.name)
+  // let tags = await waitFnloading(fetchTagList, 'fetchng tags...')(repo)
+  // tags = tags.map((item) => item.name)
 
-  // 选择一个版本号
-  const { tag } = await Inquirer.prompt({
-    name: 'tag',
-    type: "list",
-    message: 'please choise a template to create project',
-    choices: tags
-  })
+  // // 选择一个版本号
+  // const { tag } = await Inquirer.prompt({
+  //   name: 'tag',
+  //   type: "list",
+  //   message: 'please choise a template to create project',
+  //   choices: tags
+  // })
 
   // 3）通过download-git-repo拉取对应版本的模板代码，把模板放到一个临时目录里 并返回路径名称
-  const result = await waitFnloading(download, 'download template')(repo, tag)
+  // const result = await waitFnloading(download, 'download template')(repo, tag)
 
-  // 4)拷贝模板
-  // 根据项目名称 在当前目录下创建文件夹 将模板拷贝进去
-  // 使用ncp模块
-
-  // 如果没有ask.js文件，直接执行拷贝操作，否则执行复制模板逻辑
-  if(!fs.existsSync(path.join(result, 'ask.js'))) {
-
-    await ncp(result, path.resolve(projectName))
-  } else {
-    // 复杂模板
-    // 需要用户选择 然后编译模板
-    await new Promise((resolve, reject) => {
-      MetalSmith(__dirname) // 默认遍历当前路径下的src
-        .source(result)
-        .destination(path.resolve(projectName))
-        .use(async (files, metal, done) => {
-          // 命令行交互 获取用户选择参数
-          const args = require(path.join(result, 'ask.js'))
-          const obj = await Inquirer.prompt(args)
-          const meta = metal.metadata()
-          Object.assign(meta, obj)
-          delete files['ask.js']
-          done()
-
-        })
-        .use((files, metal, done) => {
-          // 根据用户选择 渲染模板
-          const obj = metal.metadata()
-          Reflect.ownKeys(files).forEach(async file => {
-            // 处理ejs <%
-            if(file.includes('js') || file.includes('json')) {
-              let content = files[file].contents.toString()
-              if(content.includes('<%')) {
-                content = await render(content, obj)
-                files[file].contents = Buffer.from(content) // 渲染
-              }
-            }
-          })
-          // 根据用户的输入 下载模板
-          done()
-        })
-        .build((err) => {
-          if(err) {
-            reject()
-          } else {
-            resolve()
-          }
-        })
-    })
-  }
+  // 执行ask.js文件，让用户填写相关信息
+  let filePath = `${projectName}/package.json`
+  let config = fs.readFileSync(filePath).toString()
+  config = JSON.parse(config)
+  Object.assign(config, {
+    "name": projectName,
+    "version": "1.0.0",
+    "description": "",
+  })
+  fs.writeFileSync(filePath, JSON.stringify(config, null, '\t'), 'utf-8')
+  console.log('project created finish')
 
 }
