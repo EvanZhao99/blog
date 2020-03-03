@@ -434,3 +434,15 @@ function f(a=10) {
 f(1)
 
 ```
+## 十八、with
+改变作用域的方式，不建议使用，有兼容问题，效率太差。 
+```js
+let obj = {
+  a: 1,
+  b: 2
+}
+with(obj) {
+  console.log(a) // 1
+}
+```
+
