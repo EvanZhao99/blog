@@ -1,41 +1,63 @@
-// const obj = {
-//     say() {
-//         Array.from(arguments).forEach(item => {
-//             console.log(`${this.str} ${item}`)
-//         })
-//     }
-// }
-// Object.defineProperties(obj, {
-//     'str': {
-//         value: 'hello',
-//         writable: false
-//     }
-// })
-// const objZh = {}
-// Object.defineProperties(objZh, {
-//     'str': {
-//         value: '你好',
-//         writable: false
-//     }
-// })
-
-// // 方法一
-// function f() {
-//     obj.say.call(objZh, ...arguments)
+// var isSymmetric = function(root) {
+//   if(!root) {
+//     return true
+//   }
+//   if(root.left === root.right) {
+//     return true
+//   }
+//   if(!root.left || !root.right) {
+//     return false
+//   }
+//   if(root.left.val !== root.right.val) {
+//     return false
+//   }
+//   return isSymmetric(root.left) && isSymmetric(root.right)
 // }
 
-// // 方法二
-// const f1 = (...arg) => {
-//     Object.assign(objZh, obj)
-//     objZh.say(...arg)
+// let p = {
+//   value: 1,
+//   left: {value: 2},
+//   right: {value: 1}
 // }
 
-// // 方法三
-// let o = {
-//     get str() {
-//         return objZh.str
-//     },
-//     say: obj.say
+// let q = {
+//   value: 1,
+//   left: {value: 1},
+//   right: { value: 2}
 // }
 
-console.log()
+// console.log(isSameTree(p, q))
+
+
+Function.prototype.before = function(beforeFn) {
+  let self = this
+  return function() {
+    // 此处的self：原函数；this: 调用before的对象
+    beforeFn.call(this, ...arguments)
+    return self.call(this, ...arguments)
+  }
+}
+
+Function.prototype.after = function(afterFn) {
+  let self = this
+  return function() {
+    let res = self.call(this, ...arguments)
+    afterFn.call(this, ...arguments)
+    return res
+  }
+}
+
+let fn = function() {
+  console.log('me')
+}
+
+let beforeFn = function() {
+  console.log('before')
+}
+
+let afterFn = function() {
+  console.log('after')
+}
+
+fn = fn.before(beforeFn).after(afterFn)
+fn()

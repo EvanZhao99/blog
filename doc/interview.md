@@ -5,6 +5,18 @@
 
 下面是我日常总结和收集的一些对于自我提高有帮助的面试题，答案写的不是很详细，不理解的可以Google一下，没必要死记硬背条目，理解就好
 
+## 未分类
+### 从输入URL到页面加载发生了什么？
+- DNS解析，通过域名拿到ip
+- 建立TCP链接
+- 发送http请求
+- 服务器处理请求，返回对应资源
+- 浏览器加载资源
+- 解析HTML，生成DOM tree
+- 解析CSS，生成style rules
+- 构建渲染树，render tree
+- layout布局，painting绘制
+
 
 ## css
 ### 1. BFC 块级格式化上下文
@@ -16,7 +28,7 @@
 
 - 规则：
   - 属于同一个BFC的两个相同Box垂直排列
-  - 属于同一个BFC的两个相邻Box的margin重叠 
+  - 属于同一个BFC的两个相邻Box的margin重叠
   - BFC的区域不会与float区域重叠
   - 计算BFC高度时，浮动元素也参与计算
   - 文字层不会被float层覆盖  环绕于周围
@@ -27,7 +39,7 @@
   - 自适应两栏布局(left:float,right:bfc),
   - 可以阻止元素被浮动元素覆盖
 
-### 2. 层叠优先级 
+### 2. 层叠优先级
 自下而上：
 - background
 - z-index < 0
@@ -164,7 +176,7 @@ let foo = function() {}
 ## Vue
 ### 1. MVVM的原理？
 - 传统的是mvc，需要手动将数据渲染到页面上。
-- 随着前端业务越来越复杂，将中间层做了抽离，封装成框架，比如Vue，也就是我们说`VM`层，实现一个双向绑定
+- 随着前端业务越来越复杂，将中间层做了抽离，封装成框架，实现数据驱动视图，也就是我们说`VM`层，比如Vue，实现一个双向绑定
 
 ### 2. 请说一下响应式数据的原理？
 - 思路：在初始化时传入`data`，对所有属性使用`defineProperty`进行重新定义，在`getter`和`setter`中添加拦截，当页面获取对应属性是进行依赖收集(收集当前组件的watcher),当属性发生变化时通知相关依赖进行更新操作。
@@ -189,6 +201,7 @@ let foo = function() {}
 ### 6. Vue中的Computed的特点
 - Computed和Watch都是一个`watcher`，区别是具备缓存，当依赖发生变化时更新视图。
 - initComputed =>new Watcher => defineComputed => createCompuedGetter
+- 通过`initComputed`对计算属性进行初始化 => 通过`new Watcher`为每个计算属性创建一个单独是`watcher` => 在`difineComputed`方法中通过`defineProperty`定义`getter`实现计算属性的响应式 => 当`watcher.dirty=true`时重新计算，否则直接返回`watcher.value`
 
 ### 7. watch的deep是如何实现的？
 - 核心是递归
@@ -209,7 +222,7 @@ let foo = function() {}
 ### 14. 用vnode来描述一个DOM结构
 - 会将`template` => ast`语法树 => render函数 => `虚拟dom`
   ```js
-  {ta, data, key, children,text}
+  {tag, data, key, children,text}
   ```
 
 ### 15. diff算法的时间复杂度
@@ -224,6 +237,11 @@ let foo = function() {}
 
 ### 18. Vue中data为什么是函数？
 - 组件复用会创建多个实例，防止多个实例共享一个data对象
+
+
+
+
+
 
 
 
