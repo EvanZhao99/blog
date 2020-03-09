@@ -238,6 +238,67 @@ let foo = function() {}
 ### 18. Vue中data为什么是函数？
 - 组件复用会创建多个实例，防止多个实例共享一个data对象
 
+### 19. Vue事件绑定的原理
+- 原生事件：on -> addEventListener
+- 组件事件：on -> vm.$on()
+- 组件native: nativeOnOn -> addEventListener
+模板编译结果：
+```js
+let compoler = require("vue-template-compiler")
+let r1 = compiler.compile('<div @click="fn"><div>')
+let r2 = compiler.compile('<div @click="fn" @click.native="fn">')
+console.log(r1.render) // {on: {click}}
+console.log(r2.render) // {on: {click}, nativeOn: {click}}
+```
+> 在创建真实dom时，原生节点的`on`会使用`addEventlistner`处理；组件的`on`使用`vm.$on`,`nativeOn`使用`addEventlistner`
+
+### 20 v-model的实现原理
+- 组件：value + input
+```js
+// 默认是value+input, 可以修改
+model: {
+  prop: 'value',
+  event: 'input'
+}
+```
+- 原生原生：会根据不同的标签 生成不同的事件和属性
+- composing: v-model不会在输入法组合文字的时候得到更新，可以使用`input`
+  ```js
+  // plateform/web/runtime/directives/model.js
+  // v-model指令 添加了对composition事件的处理，自定义了composing属性
+  function onCompositionStart (e) {
+    e.target.composing = true
+  }
+
+  function onCompositionEnd (e) {
+    // prevent triggering an input event for no reason
+    if (!e.target.composing) return
+    e.target.composing = false
+    trigger(e.target, 'input')
+  }
+
+  // plateform/web/compiler/directives/model.js
+  // 在进行代码编译时 会加上对composing的判断，在composing为true时 不会改变value的值
+  code = `if($event.target.composing)return;${code}`
+
+  // 例如
+  <input v-mode="name" type="text">
+  // 等价于
+  <input :value="name" @input="if($event.target.composing)return;name=$event.target.value">
+  ```
+
+### 21 v-html缺陷
+- xss攻击
+- 替换掉内部的子标签
+
+### 22. Vue组件通信
+- props $on $emit
+- event bus
+- Vuex
+- $children $parent
+- ref获取实例
+- provide inject
+ > vm实例会在`provided`属性存放值， 子组件会查找所有父组件的`provided`属性
 
 
 
