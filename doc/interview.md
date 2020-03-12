@@ -6,20 +6,12 @@
 下面是我日常总结和收集的一些对于自我提高有帮助的面试题，答案写的不是很详细，不理解的可以Google一下，没必要死记硬背条目，理解就好
 
 ## 未分类
-### 从输入URL到页面加载发生了什么？
-- DNS解析，通过域名拿到ip
-- 建立TCP链接
-- 发送http请求
-- 服务器处理请求，返回对应资源
-- 浏览器加载资源
-- 解析HTML，生成DOM tree
-- 解析CSS，生成style rules
-- 构建渲染树，render tree
-- layout布局，painting绘制
+
 
 
 ## css
 ### 1. BFC 块级格式化上下文
+是一个独立渲染区域，让出于BFC的元素与外部元素相互隔离，内外元素不会相互影响。
 - 触发条件： 
   - 根元素
   - position：absolute、fixed
@@ -107,198 +99,10 @@
   - animation-delay：延迟
   - 。。。
 
-## JS
-
-### 1. 原型与原型链
-- 原型：就是一个普通的js对象，为其他对象提供共享属性和方法
-- 原型链：每个对象都有一个属性`__proto__`,指向他的原型，原型本身也是一个对象，也会有自己的原型，就构成了一个链式结构。当对象被访问的属性 它自身没有的话，就会去它的原型上找，原型上没有就会去原型的原型上找，一直找到顶级的Object.prototype,如依旧没有，则返回undefined
-- 执行上下文：执行上下文可以简单理解为一个对象，对当前执行环境的描述
-    - 它包含三部分：
-      - 变量对象
-      - 作用域链
-      - this指向
-    - 类型：
-      - 全局执行上下文：浏览器关闭时被弹出栈
-      - 函数执行上下文：函数每次调用都会产生一个新的执行上下文
-      - eval执行上下文：evel执行代码字符串是会创建一个执行环境
-    - 代码执行过程：
-      - 创建 全局上下文
-      - 执行全局上下文， 自上而下执行 遇到函数时 `函数执行上下文`被push到执行栈顶层
-      - 函数上下文被激活，成为active EC,开始执行函数中的代码，caller被挂起
-      - 函数执行完后，callee被pop移除出执行栈，控制权交还给全局执行上下文（caller），继续执行
-
-### 2. 变量对象
-变量对象，是执行上下文的一部分，可以理解为一个简单的对象，存着这所有的函数形参、函数声明、变量声明。
-### 3. 活动对象
-在进入执行阶段之前，变量对象中的属性是不可访问的，在进入执行阶段之后， 变量对象变成了活动对象，里面的属性才可以被访问。  
-对于执行上下文来说，活动对象和变量对象其实都是同一个对象，只是出于执行上下文的不同生命周期。只有出于执行上下文栈顶的函数执行上下文的变量对象，才会变成活动对象
-### 3. 作用域
-执行上下文中 声明的变量及其作用范围，可以分为 块级作用域和函数作用域  
-特点：
-- 声明提升：一个声明在函数体内都是可见的，函数会优于变量
-- 非匿名自执行函数，函数变量 为 只读 状态，无法修改
-```js
-let foo = function() {}
-(function foo() {
-  foo = 10
-  console.log(foo)
-}())
-```
-### 4. 作用域链
-作用域链可以理解为一组列表，包含父级和自身的变量对象。在当前执行上下文中可以访问到父级到全局的变量，就是因为作用域链的存在
-
-### 5. 闭包
-在函数中被当做返回值的函数，可以访问上一个函数的作用域。 
-缺点：内存泄漏，将引用对象设为`null`，释放内存
-
-### 6. scirpt引入方式：
-- html 静态<script>标签
-- js 动态插入<script>
-- <script defer>: 立即下载，不影响其他操作；文档解析完成之后执行，也就是解析到</html>后再执行
-- <script async>: 立即下载，不影响其他操作；下载完立即执行，暂停HTML解析
-
-### 7. 对象拷贝
-- 浅拷贝：以赋值的形式拷贝对象，指向的时同一个地址
-- 深拷贝：递归+类型判断
-  
-### 8. new运算符的执行过程
-- 新生成一个对象
-- 设置原型：obj.__proto__ = FunctionA.prototype
-- 绑定this: FunctionA.call(this)
-- 返回新对象（如果改造函数没有的话）
-
-### 9. instanceof原理
-在原型链上如果能找到`constructor.prototype` 与 该构造函数的`prototype`相等，就返回true
-
-### 10. 类型判断
 
 
-## Vue
-### 1. MVVM的原理？
-- 传统的是mvc，需要手动将数据渲染到页面上。
-- 随着前端业务越来越复杂，将中间层做了抽离，封装成框架，实现数据驱动视图，也就是我们说`VM`层，比如Vue，实现一个双向绑定
 
-### 2. 请说一下响应式数据的原理？
-- 思路：在初始化时传入`data`，对所有属性使用`defineProperty`进行重新定义，在`getter`和`setter`中添加拦截，当页面获取对应属性是进行依赖收集(收集当前组件的watcher),当属性发生变化时通知相关依赖进行更新操作。
-- 源码：调用`initData`初始化data数据 =》调用`new Observer`对数据进行观察 =》 通过`this.walk(value)`进行对象的处理 =》 通过`defineReactive`实现对属性的响应式处理 =》 通过`Object.defineProperty`重新定义`getter`和`setter`
-- 取值：在`getter`中调用`dep.depend`进行依赖收集
-- 设值：在`setter`中调用`dep.notify`除非数据对应的依赖进行更新
 
-### 3. Vue是如何检测数组的变化的？
-- 重写数组原型，对可以改变原有数组的方法进行劫持，调用`notify`手动触发更新，然后对插入的新对象进行监听
-- 可以改变原有数组的方法: push/pop/shift/unshift/sort/splice/reverse
-- 改变数组的原型`let proto = Object.create(Array.prototype); arr.__proto__ = proto`
-- 对插入元素的方法单独处理`push,unshift,splice,`对插入的对象进行检测
-
-### 4. 为什么Vue采用异步渲染？
-- Vue采用的是组件更新，如果不采用异步更新的话，每次更新数据都会更新组件，为了性能上的考虑，在本轮数据更新后，再去异步更新视图
-- 数据更新是调用`notify`通知数据更新 =》 调用`watcher.update` =》 调用`queuewatcher`将wetcher`push`的更新队列中，通过`watcher.id`进行去重 =>在`nextTick`中异步执行`flushSchedulerQueue` =》调用`watcher.run`更新视图，并触发一些钩子
-
-### 5. nextTick实现原理
-- 核心是异步。将`cb`push到`callbacks`队列中，创建微任务去清空队列
-- promise =》 mutationObserver => setImmidiate
-
-### 6. Vue中的Computed的特点
-- Computed和Watch都是一个`watcher`，区别是具备缓存，当依赖发生变化时更新视图。
-- initComputed =>new Watcher => defineComputed => createCompuedGetter
-- 通过`initComputed`对计算属性进行初始化 => 通过`new Watcher`为每个计算属性创建一个单独是`watcher` => 在`difineComputed`方法中通过`defineProperty`定义`getter`实现计算属性的响应式 => 当`watcher.dirty=true`时重新计算，否则直接返回`watcher.value`
-
-### 7. watch的deep是如何实现的？
-- 核心是递归
-
-### 8. Vue生命周期？每个生命周期适合做哪些事？
-- created： 实例创建完成，发送请求
-- mounted： 进行DOM操作
-- beforeUpdate：更改状态，不会触发附加的重新渲染
-- destroyed: 进行优化操作，如清空定时器 解除事件
-
-### 9. Vue模板编译原理
-- 通过正则解析标签，通过`with`改变作用域，再包装成函数
-  ```js
-  let render = `with(this){return ${code}}`
-  let renderFn = new Function(render)
-  ```
-
-### 14. 用vnode来描述一个DOM结构
-- 会将`template` => ast`语法树 => render函数 => `虚拟dom`
-  ```js
-  {tag, data, key, children,text}
-  ```
-
-### 15. diff算法的时间复杂度
-- 先同级比较，再比较子节点；先判断一方有子节点另一方没有子节点的情况；比较都有子节点的情况；递归比较子节点
-
-### 16. v-for为什么需要`key`
-- 在组件更新时，会进行组件复用，通过`tag`和`key`去判断是否是同一个组件
-
-### 17. 描述组件渲染和更新的过程
-- 渲染组件是，会通过`Vue.extend`方法构建子组件的构造函数，并进行实例化。最终手动调用`$mount`进行挂载，更新组件是会进行`patchVnode`流程
-- new Vnode => createComponent => 
-
-### 18. Vue中data为什么是函数？
-- 组件复用会创建多个实例，防止多个实例共享一个data对象
-
-### 19. Vue事件绑定的原理
-- 原生事件：on -> addEventListener
-- 组件事件：on -> vm.$on()
-- 组件native: nativeOnOn -> addEventListener
-模板编译结果：
-```js
-let compoler = require("vue-template-compiler")
-let r1 = compiler.compile('<div @click="fn"><div>')
-let r2 = compiler.compile('<div @click="fn" @click.native="fn">')
-console.log(r1.render) // {on: {click}}
-console.log(r2.render) // {on: {click}, nativeOn: {click}}
-```
-> 在创建真实dom时，原生节点的`on`会使用`addEventlistner`处理；组件的`on`使用`vm.$on`,`nativeOn`使用`addEventlistner`
-
-### 20 v-model的实现原理
-- 组件：value + input
-```js
-// 默认是value+input, 可以修改
-model: {
-  prop: 'value',
-  event: 'input'
-}
-```
-- 原生原生：会根据不同的标签 生成不同的事件和属性
-- composing: v-model不会在输入法组合文字的时候得到更新，可以使用`input`
-  ```js
-  // plateform/web/runtime/directives/model.js
-  // v-model指令 添加了对composition事件的处理，自定义了composing属性
-  function onCompositionStart (e) {
-    e.target.composing = true
-  }
-
-  function onCompositionEnd (e) {
-    // prevent triggering an input event for no reason
-    if (!e.target.composing) return
-    e.target.composing = false
-    trigger(e.target, 'input')
-  }
-
-  // plateform/web/compiler/directives/model.js
-  // 在进行代码编译时 会加上对composing的判断，在composing为true时 不会改变value的值
-  code = `if($event.target.composing)return;${code}`
-
-  // 例如
-  <input v-mode="name" type="text">
-  // 等价于
-  <input :value="name" @input="if($event.target.composing)return;name=$event.target.value">
-  ```
-
-### 21 v-html缺陷
-- xss攻击
-- 替换掉内部的子标签
-
-### 22. Vue组件通信
-- props $on $emit
-- event bus
-- Vuex
-- $children $parent
-- ref获取实例
-- provide inject
- > vm实例会在`provided`属性存放值， 子组件会查找所有父组件的`provided`属性
 
 ### 23. Vue中相同的逻辑如何抽离？
 - Vue.mixin
@@ -347,7 +151,7 @@ function createComponent() {
 
 
 
-### 各种实现流程
+## 各种实现流程
 ### 1. promise是怎么实现的？
 promise的核心就是一个then方法，还有两个值value和reason，分别保存成功时的值和失败的原因，还有三个状态：fulfilled,padding,rejected.  
 then方法的核心是创建并返回一个新的promise，在excutor中将成功和失败的回调push到对应的回调栈中，在调用resolve或reject函数时创建一个微任务清空回调栈
@@ -364,9 +168,9 @@ p.then(function onfulfilled(res) => {
 ```
 
 ### 2. VueX是怎么实现的？
-首先实现install方法进行插件注册，通过Vue.mixin函数 在beforeCreate钩子中 将所有组件的实例都添加一个$store属性，可以访问到store实例
+- 首先实现install方法进行插件注册，通过Vue.mixin函数 在beforeCreate钩子中 将所有组件的实例都添加一个$store属性，可以访问到store实例
 
-创建一个Vue实例，将state放到vm实例的data上，从而实现响应式，重写一下state的getter，访问state时都从vm实例上拿数据
+- 创建一个Vue实例，将state放到vm实例的data上，从而实现响应式，重写一下state的getter，访问state时都从vm实例上拿数据
 
 ### 3. 如何封装Element的table和form组件？
 
@@ -387,7 +191,7 @@ p.then(function onfulfilled(res) => {
 - fix分支，当线上产品发现bug时，我们会从master分支checkout一个fix分支，修复完成后，合并到master和develop分支
 
 ### 6. diff算法的了解
-- diff算法的本质是找出两个对象之间的差异，目的是尽可能复用节点。
+> diff算法的本质是找出两个对象之间的差异，目的是尽可能复用节点。
 - Vue首先会判断是否是同一个组件，它是根据key和tag去判断的，还有一些其他的属性，具体的记不清了。
 - 如果不是同一个组件就删除重建，是的话就更新，比较出两个对象的差异，直接对真是DOM进行增删改操作。
 - updateChildren子组件更新，组件下面可能会存在多个子组件，依次对比前后子组件是否为同一组件，是的话就调用patchNode方法，否则删除重建。
@@ -403,6 +207,8 @@ p.then(function onfulfilled(res) => {
 
 
 
+
+## 面试经历
 ## 头条一面
 1. 实现一个函数，判定一个给定的正整数n,是否和除了它自身以外的所有正因子之和相等，相等返回true， 否则返回false。
    示例： 输入：28， 输出： true  
@@ -420,4 +226,29 @@ function isSum(n) {
     return res === n
 }
 console.log(isSum(28))  // true
+```
+
+## todo
+- 说一下你对脚手架的理解?
+  [脚手架的实现原理](https://github.com/pluckychuang/blog/blob/master/doc/%E5%89%8D%E7%AB%AF%E8%84%9A%E6%89%8B%E6%9E%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.md)
+
+Vue指令如何封装，钩子函数有哪些？
+- 分为全局指令和局部指令
+- 全局指令:
+```js
+Vue.directive('name', {
+    inserted(el) {
+        el.style.display = 'none' // block inline
+    }
+})
+```
+- 局部指令：
+```js
+directives: {
+    directiveName: {
+        insterted(el) {
+            
+        }
+    }
+}
 ```
