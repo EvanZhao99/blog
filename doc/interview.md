@@ -300,7 +300,46 @@ model: {
 - provide inject
  > vm实例会在`provided`属性存放值， 子组件会查找所有父组件的`provided`属性
 
+### 23. Vue中相同的逻辑如何抽离？
+- Vue.mixin
+- 源码：
+  ```js
+  // 1）通过mergeOptions合并生命周期为数组
+  // core/util/options.js -- mergehook
+  parentVal.concat(childVal)
 
+  // 2) 在callHook中遍历生命周期数组
+  // core/instance/lefecycle.js
+  export function callHook (vm: Component, hook: string) {
+    // #7573 disable dep collection when invoking lifecycle hooks
+    pushTarget()
+    const handlers = vm.$options[hook]
+    const info = `${hook} hook`
+    if (handlers) {
+      for (let i = 0, j = handlers.length; i < j; i++) {
+        invokeWithErrorHandling(handlers[i], vm, null, vm, info)
+      }
+    }
+    if (vm._hasHookEvent) {
+      vm.$emit('hook:' + hook)
+    }
+    popTarget()
+  }
+  ```
+
+### 24. Vue异步组件
+- 异步加载 减小打包提交 通过`import()`实现代码分割加载
+- 源码：
+```js
+// 异步组件一定是一个函数
+// core/vdom/create-component.js
+function createComponent() {
+  // 如果组件是一个函数
+  resolveAsyncComponent()
+}
+
+
+```
 
 
 
