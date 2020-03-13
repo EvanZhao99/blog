@@ -134,17 +134,31 @@ model: {
 - provide inject
  > vm实例会在`provided`属性存放值， 子组件会查找所有父组件的`provided`属性
 
- ### 23 异步组件
- 通过`import()`可以实现代码分割，减小打包体积
- - 代码
-    - 通过 createAsyncPlaceholder 立即执行 asyncFactory
-    - 因为是异步 会返回`undefined`
-    - 通过createAsyncPlaceholder 创建一个注释<!->` 作为展位符
-    - asyncFactory 成功后调用`resolve`
-    - 通过`forceRender`强制更新
-    - 再次调用`resolveAsyncComponent`,返回组件
-    - 进行初始化，创建`vnode`，渲染组件
-  ```js
-  // vdom/create-component -- async component
-  ```
+### 23 异步组件
+ > 通过`import()`可以实现代码分割，减小打包体积
+ - 异步组件本质上是一个工厂函数`asyncFactory`, 传入两个参数`resolve/reject`
+ - 在通过`create-component`创建组件时，如果遇到异步组件
+- 通过 `resolveAsyncComponent` 立即执行 asyncFactory
+- 因为是异步 会先返回`undefined`
+- 通过createAsyncPlaceholder 创建一个注释<!->` 作为占位符
+- asyncFactory 成功后调用`resolve`
+- 通过`forceRender`强制更新
+- 再次调用`resolveAsyncComponent`,返回组件
+- 进行初始化，创建`vnode`，渲染组件
+- 源码分析：[Vue异步组件原理]
 
+### 24 vue相同的逻辑如何抽离
+- mixin 混入公共逻辑
+- 定义全局指令
+#### mixin
+> 给每个组件的生命周期、data、methods等混入一些公共逻辑。
+- 全局：Vue.minx
+- 组件：{mixins:[]}
+-
+- 合并策略：
+- 值为对象的选项合并： 进行递归合并为同一个对象，发生冲突时以组件数据优先
+- 同名钩子：被合并成数组
+- 
+- 源码：
+- 如果是`组件的minxins`，遍历数组，递归调用`mergeOptions`进行合并
+- 通过`config.optionMergeStrategies`获取对应属性的合并策略，没有就使用默认的策略（组件优先）
