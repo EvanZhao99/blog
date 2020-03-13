@@ -31,11 +31,20 @@
 ### 7. watch的deep是如何实现的？
 - 核心是递归
 
-### 8. Vue生命周期？每个生命周期适合做哪些事？
+### 8. Vue生命周期？每个生命周期适合做哪些事？父子组件执行顺序？
 - created： 实例创建完成，发送请求
 - mounted： 进行DOM操作
 - beforeUpdate：更改状态，不会触发附加的重新渲染
 - destroyed: 进行优化操作，如清空定时器 解除事件
+  
+#### 父子组件执行顺序
+> 由外到内执行：beforeCreate,created, beforeMount; 再由内到外执行mounted
+
+- beforeCreate,created, beforeMount, mounted, beforeUpdate, updated, beforeDistroy, distroyed
+- 根组件：beforeCreate, created,beforeMount, mounted
+- 非根父组件：beforeCreate, created, beforeMount
+- 子组件：：beforeCreate, created, beforeMount， =》mounted
+- 非根父组件： mounted
 
 ### 9. Vue模板编译原理
 - 通过正则解析标签，通过`with`改变作用域，再包装成函数
@@ -125,11 +134,17 @@ model: {
 - provide inject
  > vm实例会在`provided`属性存放值， 子组件会查找所有父组件的`provided`属性
 
- ### 23 Vue的声明周期有哪些？父子组件的声明周期执行顺序？
-> 由外到内执行：beforeCreate,created, beforeMount; 再由内到外执行mounted
+ ### 23 异步组件
+ 通过`import()`可以实现代码分割，减小打包体积
+ - 代码
+    - 通过 createAsyncPlaceholder 立即执行 asyncFactory
+    - 因为是异步 会返回`undefined`
+    - 通过createAsyncPlaceholder 创建一个注释<!->` 作为展位符
+    - asyncFactory 成功后调用`resolve`
+    - 通过`forceRender`强制更新
+    - 再次调用`resolveAsyncComponent`,返回组件
+    - 进行初始化，创建`vnode`，渲染组件
+  ```js
+  // vdom/create-component -- async component
+  ```
 
-- beforeCreate,created, beforeMount, mounted, beforeUpdate, updated, beforeDistroy, distroyed
-- 根组件：beforeCreate, created,beforeMount, mounted
-- 非根父组件：beforeCreate, created, beforeMount
-- 子组件：：beforeCreate, created, beforeMount， =》mounted
-- 非根父组件： mounted
