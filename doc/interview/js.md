@@ -87,9 +87,9 @@ let foo = function() {}
 在原型链上如果能找到`constructor.prototype` 与 该构造函数的`prototype`相等，就返回true
 
 ### 11. 类型判断
-- 基本类型（null）: 使用`String(null)`
+- 基本类型（null）: 使用`String(null)='null'`
 - 基本类型（string/number/boolean/undefined）+ function: 直接使用`typeof`
-- 其余引用类型（ObjectArray/Date/RegExp/Error）： 调用`toString`后根据`[object xxx]`进行判断
+- 其余引用类型（Object/Array/Date/RegExp/Error）： 调用`toString`后根据`[object xxx]`进行判断
 
 ### 12. 代码复用
 - 函数封装
