@@ -150,3 +150,22 @@ model: {
 ### 24 插槽和作用域插槽
 - 普通插槽：将 在父组件渲染好的结果 直接替换到 子组件的插槽上，整个渲染过程是在父组件进行的，所有作用域是父组件
 - 作用域插槽：会将插槽的内容包装成一个函数，在子组件渲染是会调用该函数 并以参数形式将属性传入回调。所以插槽内容的渲染是在子组件中进行的，作用域是子组件
+
+```js
+// core/instance/render-helper/render-slot.js
+```
+
+### 25 keep-alive
+- 属性：include/exclude
+- 声明周期： activated/deactivated
+- 在cache中保存组件列表，
+- 通过最久未使用（lru）算法进行管理`key`值的列表
+
+```js
+// core/components/keep-alive
+```
+
+### 26 编码优化
+
+
+### 27 Vue加载性能优化
