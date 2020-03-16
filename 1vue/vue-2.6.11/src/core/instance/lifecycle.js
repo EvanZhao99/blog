@@ -29,6 +29,10 @@ export function setActiveInstance(vm: Component) {
   }
 }
 
+/**
+ * 初始化声明周期
+ * 确定父子关系 为组件实例添加$parent $children
+ */
 export function initLifecycle (vm: Component) {
   const options = vm.$options
 
@@ -164,6 +168,8 @@ export function mountComponent (
       }
     }
   }
+
+  // 触发beforeMount钩子
   callHook(vm, 'beforeMount')
 
   let updateComponent
@@ -176,11 +182,15 @@ export function mountComponent (
       const endTag = `vue-perf-end:${id}`
 
       mark(startTag)
+
+      // 创建虚拟节点
       const vnode = vm._render()
       mark(endTag)
       measure(`vue ${name} render`, startTag, endTag)
 
       mark(startTag)
+
+      // 根据虚拟节点更新属性 patch
       vm._update(vnode, hydrating)
       mark(endTag)
       measure(`vue ${name} patch`, startTag, endTag)
@@ -207,6 +217,8 @@ export function mountComponent (
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
     vm._isMounted = true
+
+    // 触发mounted钩子
     callHook(vm, 'mounted')
   }
   return vm

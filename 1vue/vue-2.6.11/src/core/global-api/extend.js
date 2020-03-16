@@ -15,6 +15,8 @@ export function initExtend (Vue: GlobalAPI) {
 
   /**
    * Class inheritance
+   * 使用Vue构造器创建一个子类，参数是包含组件选项的对象
+   * 返回一个子组件构造函数 内部调用Vue_init实现响应功能
    */
   Vue.extend = function (extendOptions: Object): Function {
     extendOptions = extendOptions || {}
@@ -30,6 +32,10 @@ export function initExtend (Vue: GlobalAPI) {
       validateComponentName(name)
     }
 
+    /**
+     * 子组件构造函数
+     * @param {*} options 
+     */
     const Sub = function VueComponent (options) {
       this._init(options)
     }

@@ -113,6 +113,11 @@ export function createComponent (
 
   // plain options object: turn it into a constructor
   if (isObject(Ctor)) {
+    /**
+   * 将用户传进来的对象转换成构造函数
+   * 通过Vue.extend
+   * 路径：core/global-api/extend.js
+   */
     Ctor = baseCtor.extend(Ctor)
   }
 
