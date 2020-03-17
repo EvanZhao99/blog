@@ -154,6 +154,10 @@ let foo = function() {}
       }
     }
   }
+  let fn = function(){}
+  fn = throttle(fn, 100)
+  fn(1)
+  fn(1, 2, 3)
   ```
 
 ### 16 this的指向

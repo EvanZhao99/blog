@@ -209,3 +209,8 @@ new webpack.ProvidePlugin({
 ```
 
 参考：[webpack中文文档](https://webpack.docschina.org/concepts)
+
+为什么会区分宏任务与微任务
+直播原理
+同时在线
+socketIO 链接模式

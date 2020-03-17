@@ -81,7 +81,6 @@ function loader(source) {
 module.exports = loader
 ```
 
-
 ## 四、plugin实现
 plugin是一个类，包含`apply`函数
 ```js
