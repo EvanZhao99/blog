@@ -1,4 +1,12 @@
 # websocket
+
+## todu
+- \n：newline; \r: carriage
+
+
+
+
+
 ## 什么是websocket
 websock是HTML5的一个新协议，它允许服务端向客户端发送请求，实现浏览器与服务器的双工通信
 
@@ -13,3 +21,5 @@ websock是HTML5的一个新协议，它允许服务端向客户端发送请求�
 ## socketIO
 跨平台的websocket通信库，具有前后端一致的API，可以触发和相应自定义事件。  
 socketIO核心API就是`emit`和`on`,前后端一致
+
+
