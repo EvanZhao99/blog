@@ -2,6 +2,7 @@
 
 ## todu
 - \n：newline; \r: carriage
+- ob: 表示后面都是二进制。0b11 === 3
 
 
 
