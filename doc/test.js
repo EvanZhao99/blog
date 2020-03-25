@@ -1,55 +1,38 @@
-let strategies = {
-  isNoEmepty: function(value, errorMsg) {
-    if(!value && value !== 0) {
-      return errorMsg
-    }
-  },
-  minLength: function(value,length, errorMsg) {
-    if(value.length < length) {
-      return errorMsg
-    }
-  },l
-  isMobile: function(value, errorMsg) {
-    if(!/^1[0-9]{10}$/.test(value)) {
-      return errorMsg
-    }
+let iterator = function(arr) {
+  let current = 0
+
+  let next = function() {
+    current ++
+  }
+
+  let isDone = function() {
+    return current >= arr.length
+  }
+
+  let getCurrentItem = function() {
+    return arr[current]
+  }
+
+  return {
+    next,
+    isDone,
+    getCurrentItem
   }
 }
 
-let Validator = function() {
-  this.cache = [] // 保存校验规则
-}
-
-Validator.prototype.add = function(dom, rule, errorMsg) {
-  this.cache.push(function() {
-    let arr = rule.split(':')
-    let strategy = arr.shift()
-    arr.unshift(dom.value)
-    arr.push(errorMsg)
-    return strategies[strategy].call(this, ...arr)
-  })
-}
-
-Validator.prototype.start = function() {
-  for(let i = 0; i < this.cache.length; i++) {
-    let validatorFn = this.cache[i]
-    let msg = validatorFn()
-    if(msg) {
-      return msg
+let compare = function(iterator1, iterator2) {
+  while(!iterator1.isDone() && !iterator2.isDone()) {
+    if(iterator1.getCurrentItem() !== iterator2.getCurrentItem()) {
+      throw new Error('不相等')
     }
+    iterator1.next()
+    iterator2.next()
   }
+
+  console.log('相等')
 }
 
-// 使用
-let form = document.getElementById('form')
-submitBtn.onsubmit = function() {
-  let validator = new Validator()
-  validator.add(form.username, 'isNoEmpty', '用户名不能为空')
-  validator.add(form.hasPointerCapture, 'isMobile', '请输入正确手机号')
-  validator.add(form.password, 'minLength:6', '密码最少6位')
-  let errorMsg = validator.start()
-  if(errorMsg) {
-    alert(errorMsg)
-    return false
-  }
-}
+let iterator1 = iterator([1, 2, 3])
+let iterator2 = iterator([1, 2, 3])
+
+compare(iterator1, iterator2) // 相等
