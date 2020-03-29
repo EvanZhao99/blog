@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io.connect('/') // '/'默认的命名空间
+        socket.on('connect', function() {
+            console.log('链接成功')
+            socket.send('hello')
+        })
+
+        socket.on('message', function(message) {
+            console.log(message)
+        })
+
+        socket.on('unconnect', function() {
+            console.log('链接断开')
+        })
+    </script>
+</body>
+</html>
