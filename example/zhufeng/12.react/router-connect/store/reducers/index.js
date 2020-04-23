@@ -1,5 +1,5 @@
 
 
-let reducer = {
+let reducer = combineReducers({
     
-}
+})
