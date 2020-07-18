@@ -1,7 +1,7 @@
 class Animal{
     constructor(name) {
-        this.name = name
-        this.age = 1
+        this.name = name;
+        this.age = 1;
     }
     static getType() {
         return 'animal'

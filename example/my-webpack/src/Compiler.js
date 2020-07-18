@@ -3,7 +3,8 @@ let fs = require('fs')
 let babylon = require('babylon')
 let traverse = require('@babel/traverse').default
 let generator = require('@babel/generator').default
-let {SyncHook} = require('tapable')
+let {SyncHook} = require('tapable');
+let transform = require('@babel/core').transform;
 
 // 提供一个运行的方法
 class Compiler {
@@ -53,24 +54,47 @@ class Compiler {
     // 解析source
     parser(source, parentDir) {
         // ast语法树解析代码
-        let ast = babylon.parse(source)
+        let ast = babylon.parse(source, {
+            sourceType: 'module',
+            plugins: [
+                'decorators'
+            ]
+        })
+        // let ast = transform(source, function(err, result) {
+        //     if(err) return console.log(err);
+        //     let ast = result.ast;
+        //     console.log('==result:', result)
+        // });
         let dependencies = []
+        let configMap = {};
         // 遍历树
         traverse(ast, {
-            CallExpression(p) {
-                let node = p.node
-                if(node.callee.name === 'require') {
-                    node.callee.name = '__webpack_require__'
-                    // 增加一个后缀名 .js
-                    let pathValue = node.arguments[0].value
-                    pathValue = path.extname(pathValue) ? pathValue : pathValue + '.js'
-                    // 增加前缀
-                    node.arguments[0].value = './' + path.join(parentDir, pathValue)
-                    // 依赖收集
-                    dependencies.push(node.arguments[0].value)
+            // CallExpression(p) {
+            //     let node = p.node
+                // if(node.callee.name === 'require') {
+                //     node.callee.name = '__webpack_require__'
+                //     // 增加一个后缀名 .js
+                //     let pathValue = node.arguments[0].value
+                //     pathValue = path.extname(pathValue) ? pathValue : pathValue + '.js'
+                //     // 增加前缀
+                //     node.arguments[0].value = './' + path.join(parentDir, pathValue)
+                //     // 依赖收集
+                //     dependencies.push(node.arguments[0].value)
+                // }
+                // console.log('===node',node)
+            // }
+            Decorator(path) {
+                let node = path.node;
+                let decoratorName = node.expression.callee.name;
+                if(decoratorName === 'subscribe') {
+                    let componentName = path.parentPath.parentPath.parent.id.name;
+                    let messageName = node.expression.arguments[0].value;
+                    let componentNames = configMap[messageName] = configMap[messageName] || [];
+                    componentNames.push(componentName);
                 }
             }
         })
+        console.log(configMap)
         // 重新生成树
         let r = generator(ast)
         this.hooks.parse.call(this)
@@ -84,7 +108,10 @@ class Compiler {
         if(isMain) {
             this.entryId = relativePath
         }
-        let { r, dependencies } = this.parser(source, parentDir)
+        // let { r, dependencies } = this.parser(source, parentDir);
+        // 测试
+        this.parser(source, parentDir)
+        return;
         this.modules[relativePath] = r
         // 递归进行依赖构建
         dependencies.forEach(dep => {
@@ -113,6 +140,7 @@ class Compiler {
     run() {
         // 依赖构建 调用loader编译
         this.buildModule(path.join(this.root, this.entry), true)
+        return;
         // 用模板生成一个 输出的文件
         this.emitFile()
     }
