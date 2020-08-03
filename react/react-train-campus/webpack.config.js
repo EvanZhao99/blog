@@ -45,7 +45,62 @@ module.exports = {
                         module: 'es2015'
                     }
                 }
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', {
+                    loader: 'css-loader', // 处理css中的import 和 url
+                    options: {
+                        importLoaders: 0 // todo:如果不配置 都按顺序加载会怎样？？？
+                    }
+                }, {
+                    loader: 'postcss-loader', // 添加兼容前缀
+                    options: {
+                        plugins: [
+                            require('autoprefixer')
+                        ]
+                    }
+                }, {
+                    loader: 'px2rem-loader',
+                    options: {
+                        remUnit: 75, // 一个rem代表75px
+                        remPrecesion: 8 // 计算精度保留8位小数
+                    }
+                }]
+            }, {
+                test: /\.less$/,
+                use: ['style-loader', {
+                    loader: 'css-loader', // 处理css中的import 和 url
+                    options: {
+                        importLoaders: 0 // todo:如果不配置 都按顺序加载会怎样？？？
+                    }
+                }, {
+                    loader: 'postcss-loader', // 添加兼容前缀
+                    options: {
+                        plugins: [
+                            require('autoprefixer')
+                        ]
+                    }
+                }, {
+                    loader: 'px2rem-loader',
+                    options: {
+                        remUnit: 75, // 一个rem代表75px
+                        remPrecesion: 8 // 计算精度保留8位小数
+                    }
+                },
+                'less-loader']
+            }, {
+                test: /\.(jpg|png|gif|svg|jpeg)$/,
+                use: ['url-loader']
             }
         ]
-    }
+    },
+    plugins: [
+        // html模板
+        new HtmlWebpackPlugin({
+            template: './src/index.html'
+        }),
+        // 热更新
+        new webpack.HotModuleReplacementPlugin()
+    ]
 };
