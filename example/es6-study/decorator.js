@@ -24,12 +24,20 @@
 // console.log(Parent.isParent)
 // console.log(Sub.isParent)
 
-class Model{
-    @classDecorator
-    show() {
+@myDecorator
+    @myDecorator2
+    class Model{
+        @myDecorator
+        @myDecorator2
+        show() {};
+        @myDecorator
+        @myDecorator2
+        names = 'zhufeng';
     }
-}
 
-function classDecorator(target, a, b, c) {
-    console.log('===',a, b, c)
-}
+    function myDecorator(target) {
+        console.log('=========1',target)
+    }
+    function myDecorator2(target) {
+        console.log('===========2', target)
+    }

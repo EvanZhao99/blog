@@ -1,0 +1,17 @@
+.title1{
+    color: #fff;
+    font-size: 12px;
+    background-color: #4e6ef2;
+    width: 112px;
+    height: 40px;
+    line-height: 40px;
+    margin: 10px;
+    border-radius: 0 10px 10px 0;
+    text-align: center;
+    font-size: 17px;
+    cursor: pointer;
+
+}
+.title1:hover{
+    background-color:  #4662D9;
+}
