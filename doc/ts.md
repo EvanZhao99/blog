@@ -319,3 +319,20 @@ let add: Calculate = function <T>(a: T, b: T) {
 }
 add(1, 2)
 ```
+### 结构类型系统
+duck-check
+#### 接口兼容性
+- 参数可以少不能多
+
+#### 函数参数的协变
+参数类型的限制可以变得更严、范围更窄，不能更宽松
+```ts
+type logFn = (a: number | string) => void;
+let log: logFn;
+let log2 = function(a: number | string | boolean): void {
+
+}
+log = log2;
+```
+
+

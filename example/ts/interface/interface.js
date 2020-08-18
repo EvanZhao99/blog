@@ -44,3 +44,10 @@ var c;
     var result = arr.getMax();
     console.log(result);
 })(c || (c = {}));
+var d;
+(function (d) {
+    var add = function (a, b) {
+        return a;
+    };
+    add(1, 2);
+})(d || (d = {}));
