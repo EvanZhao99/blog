@@ -319,8 +319,9 @@ let add: Calculate = function <T>(a: T, b: T) {
 }
 add(1, 2)
 ```
-### 结构类型系统
-duck-check
+### 结构类型系统 & 类型兼容
+- duck-check
+- 范围只能变小，满足大范围的肯定满足小范围。
 #### 接口兼容性
 - 参数可以少不能多
 

@@ -12,3 +12,5 @@ u.changeName('zhanghua');
 console.log(u.name);
 
 
+
+
