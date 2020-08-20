@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware, Store, AnyAction } from 'redux';
 import reducers, {CombinedState} from './reducers';
 import thunk, {ThunkDispatch, ThunkAction } from 'redux-thunk';
-import reducer from './reducers/index';
 import logger from 'redux-logger';
 import promise from 'redux-promise';
 import {routerMiddleware} from 'connected-react-router';
