@@ -83,14 +83,35 @@ class Compiler {
                 // }
                 // console.log('===node',node)
             // }
-            Decorator(path) {
+
+            // 装饰器-----
+            // Decorator(path) {
+            //     let node = path.node;
+            //     let decoratorName = node.expression.callee.name;
+            //     if(decoratorName === 'subscribe') {
+            //         let componentName = path.parentPath.parentPath.parent.id.name;
+            //         let messageName = node.expression.arguments[0].value;
+            //         let componentNames = configMap[messageName] = configMap[messageName] || [];
+            //         componentNames.push(componentName);
+            //     }
+            // }
+
+            // PubSub监听-------
+            CallExpression(path) {
                 let node = path.node;
-                let decoratorName = node.expression.callee.name;
-                if(decoratorName === 'subscribe') {
-                    let componentName = path.parentPath.parentPath.parent.id.name;
-                    let messageName = node.expression.arguments[0].value;
+                let objectName = node.callee.object && node.callee.object.name;
+                let propertyName = node.callee.property && node.callee.property.name;
+                if(objectName === 'PubSub' && propertyName === 'subscribe') {
+                    let messageName = node.arguments[0].value;
+                    let parentPath = path.parentPath;
+                    while(parentPath && parentPath.parent.type !== 'ClassDeclaration') {
+                        parentPath = parentPath.parentPath;
+                    }
+                    let componentName = parentPath.parent.id.name;
                     let componentNames = configMap[messageName] = configMap[messageName] || [];
                     componentNames.push(componentName);
+                    console.log('消息路由配置：', configMap);
+
                 }
             }
         })
