@@ -40,3 +40,26 @@
 
 ## 八、Toolkit
 
+## 九、 源码分析
+### 0 tem
+1. 通过reducer实现路由？action.type对应function
+
+### 1. createStore
+返回一个store对象
+```js
+return {
+    dispatch, // 派发action
+    subscribe, // push listener,并返回unsubscribe
+    getState, // 返回 currentState
+    replaceReducer, // 懒加载 currentReducer = nextReducer
+    [$$observable]: observable
+  }
+```
+### 2 reducer
+1. 纯函数
+   1. 相同的输入产生相同的输出
+   2. 不改变外部作用域变量
+
+
+  
+
