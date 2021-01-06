@@ -1,0 +1,1 @@
+type K = keyof any;
