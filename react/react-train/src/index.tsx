@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Tree from "./Tree"
+import Tree from "./components/Tree"
 
 ReactDOM.render(
-  <Tree></Tree>, 
+  <div>
+    <h1>react train</h1>
+    <Tree></Tree>
+  </div>, 
   document.getElementById('root')
 )
