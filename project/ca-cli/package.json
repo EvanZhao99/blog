@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "commander": "^4.1.1",
     "consolidate": "^0.15.1",
     "download-git-repo": "^3.0.2",
