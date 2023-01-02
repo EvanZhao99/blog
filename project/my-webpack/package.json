@@ -19,9 +19,9 @@
     "@babel/traverse": "^7.7.4",
     "babylon": "^6.18.0",
     "ejs": "^3.0.1",
-    "webpack": "^4.41.5"
+    "webpack": "^5.75.0"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^5.0.1"
   }
 }
